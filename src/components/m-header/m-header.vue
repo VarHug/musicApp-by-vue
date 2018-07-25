@@ -25,7 +25,7 @@
     height: 64px
     padding-top 15px
     text-align: center
-    color $color-text-head
+    color $color-text-head-hover
     font-size: 0
     background-color $color-background-head
     box-sizing border-box
