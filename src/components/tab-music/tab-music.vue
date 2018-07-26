@@ -21,22 +21,31 @@
       };
     },
     mounted() {
-      // 获取DOM元素
-      let border = this.$refs.border;
-      let tabItem = document.getElementsByClassName('tab-item');
-      let tabItemWidth = tabItem[0].clientWidth;
-      let diff = (tabItemWidth - border.clientWidth) / 2;
-      // 设置动画运行的位置数组
-      for (let i = 0; i < tabItem.length; i++) {
-        this.pos.push(i * tabItemWidth + diff);
-      }
-      // 设置位置
-      border.style.left = `${this.pos[0]}px`;
+      this.$nextTick(() => {
+        this._setBorderPos();
+
+        window.addEventListener('resize', () => {
+          this._setBorderPos();
+        });
+      });
     },
     methods: {
       tabClickHandler(index) {
         let border = this.$refs.border;
         border.style.left = `${this.pos[index]}px`;
+      },
+      _setBorderPos() {
+        // 获取DOM元素
+        let border = this.$refs.border;
+        let tabItem = document.getElementsByClassName('tab-item');
+        let tabItemWidth = tabItem[0].clientWidth;
+        let diff = (tabItemWidth - border.clientWidth) / 2;
+        // 设置动画运行的位置数组
+        for (let i = 0; i < tabItem.length; i++) {
+          this.pos[i] = i * tabItemWidth + diff;
+        }
+        // 设置位置
+        border.style.left = `${this.pos[0]}px`;
       }
     }
   };
