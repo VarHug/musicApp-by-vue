@@ -15,6 +15,10 @@
       <td>图标icon</td>
       <td>阿里巴巴矢量图标库/Icon MOON</td>
     </td>
+    <tr>
+      <td>音乐资源</td>
+      <td>QQ音乐</td>
+    </td>
   </tbody>
 </table>
 
