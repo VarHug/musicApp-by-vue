@@ -31,7 +31,7 @@ export default {
     // 自动轮播
     autoPlay: {
       type: Boolean,
-      default: false
+      default: true
     },
     // 自动轮播间隔
     interval: {
@@ -66,6 +66,26 @@ export default {
         this._refresh();
       }, 60);
     });
+  },
+  activated() {
+    if (!this.slider) {
+      return;
+    }
+    this.slider.enable();
+    let pageIndex = this.slider.getCurrentPage().pageX;
+    this.slider.goToPage(pageIndex, 0, 0);
+    this.curPageIndex = pageIndex;
+    if (this.autoPlay) {
+      this._play();
+    }
+  },
+  deactivated() {
+    this.slider.disable();
+    clearTimeout(this.timer);
+  },
+  beforeDestroy() {
+    this.slider.disable();
+    clearTimeout(this.timer);
   },
   methods: {
     _setSelectWidth(isResize) {
