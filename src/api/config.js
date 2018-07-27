@@ -10,4 +10,8 @@ export const options = {
   param: 'jsonpCallback'
 };
 
+export function setOptions(opts) {
+  return Object.assign(options, opts);
+}
+
 export const ERR_OK = 0;

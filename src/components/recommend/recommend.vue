@@ -1,43 +1,63 @@
 <template>
   <div class="recommend">
-    <div class="recommend-content">
-      <div v-if="recommends.length" class="slider-wrapper">
-        <div class="slider-bg"></div>
-        <div class="slider-content">
-          <slider>
-            <div v-for="(item, index) in recommends" :key="index">
-              <a :href="item.linkUrl" class="img-wrapper">
-                <div class="img-wrapper-bgc"></div>
-                <img :src="item.picUrl" class="slider-img">
-              </a>
-            </div>
-          </slider>
+    <scroll class="recommend-content" :data="dissList" :pullup="pullup" @scrollToEnd="loadDissList">
+      <div>
+        <div v-if="recommends.length" class="slider-wrapper">
+          <div class="slider-bg"></div>
+          <div class="slider-content">
+            <slider>
+              <div v-for="(item, index) in recommends" :key="index">
+                <a :href="item.linkUrl" class="img-wrapper">
+                  <div class="img-wrapper-bgc"></div>
+                  <img :src="item.picUrl" class="slider-img">
+                </a>
+              </div>
+            </slider>
+          </div>
+        </div>
+        <div class="recommend-list" ref="recommendList">
+          <h1 class="list-title">
+            热门歌单推荐
+            <i class="icon icon-arrow-right"></i>
+          </h1>
+          <ul v-if="dissList.length" class="list">
+            <li v-for="(item, index) in dissList" :key="index" class="item" ref="item">
+              <div class="img-wrapper">
+                <img v-lazy="item.imgurl">
+              </div>
+              <p class="desc" v-html="item.dissname"></p>
+            </li>
+          </ul>
         </div>
       </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul>
-
-        </ul>
-      </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 
+import Scroll from '@/base/scroll/scroll';
 import Slider from '@/base/slider/slider';
-import {getRecommend} from '@/api/recommend.js';
+import {getRecommend, getDissList} from '@/api/recommend.js';
 import {ERR_OK} from '@/api/config.js';
 
 export default {
   data() {
     return {
-      recommends: []
+      pullup: true,
+      recommends: [],
+      // 歌单列表
+      dissList: [],
+      sin: 0,
+      ein: 8
     };
   },
   created() {
     this._getRecommend();
+    this._getDissList();
+  },
+  mounted() {
+
   },
   methods: {
     _getRecommend() {
@@ -46,10 +66,26 @@ export default {
           this.recommends = res.data.slider;
         }
       });
+    },
+    _getDissList() {
+      getDissList({
+        sin: this.sin,
+        ein: this.ein
+      }).then(res => {
+        if (res.code === ERR_OK) {
+          this.dissList = this.dissList.concat(res.data.list);
+        }
+      });
+    },
+    loadDissList() {
+      this.sin += 9;
+      this.ein += 9;
+      this._getDissList();
     }
   },
   components: {
-    Slider
+    Slider,
+    Scroll
   }
 };
 
@@ -59,19 +95,19 @@ export default {
   @import "~common/stylus/variable"
 
   .recommend
-    position: fixed
-    width: 100%
-    top: 104px
-    bottom: 0
+    position fixed
+    width 100%
+    top 104px
+    bottom 0
     .recommend-content
-      height: 100%
-      overflow: hidden
+      height 100%
+      overflow hidden
       .slider-wrapper
-        position: relative
+        position relative
         width 100%
         height 0
         padding-top 40%
-        overflow: hidden
+        overflow hidden
         .slider-bg
           position absolute
           top 0
@@ -90,10 +126,35 @@ export default {
           margin 0 auto
           border-radius 5px
       .recommend-list
+        width 96%
+        margin 0 auto
         .list-title
-          height: 65px
-          line-height: 65px
-          text-align: center
-          font-size: $font-size-medium
-          color: $color-text
+          margin-left 0.6%
+          height 40px
+          line-height 40px
+          font-size $font-size-medium
+          font-weight bold
+          color $color-text
+          .icon
+            font-size $font-size-small-s
+            color $color-text-head
+        .list
+          .item
+            display inline-block
+            width 33.3%
+            font-size 0
+            vertical-align top
+            box-sizing border-box
+            .img-wrapper
+              img
+                display block
+                width 96%
+                height 100%
+                margin 0 auto
+                border-radius 5px
+            .desc
+              margin-top 5px
+              line-height 18px
+              font-size $font-size-small-s
+              color $color-text
 </style>
