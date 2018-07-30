@@ -60,20 +60,20 @@
     height: 40px
     line-height: 40px
     font-size: $font-size-medium
-    background-color $color-background-head
+    background-color $color-background-red
     .tab-item
       flex: 1
       text-align: center
       .tab-link
-        color $color-text-head
+        color $color-text-white
         padding-bottom: 5px
       &.router-link-active
         .tab-link
-          color: $color-text-head-hover
+          color: $color-text-white-hover
     .border
       position absolute
       width 40px
       height 35px
-      border-bottom 1px solid $color-text-head
+      border-bottom 1px solid $color-text-white
       transition left .3s
 </style>

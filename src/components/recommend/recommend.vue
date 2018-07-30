@@ -118,7 +118,7 @@ export default {
           left 0
           width 100%
           height 70%
-          background-color $color-background-head
+          background-color $color-background-red
         .slider-content
           position absolute
           top 0
@@ -141,7 +141,7 @@ export default {
           color $color-text
           .icon
             font-size $font-size-small-s
-            color $color-text-head
+            color $color-text-white
         .list
           .item
             display inline-block
