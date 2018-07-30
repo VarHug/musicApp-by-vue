@@ -28,8 +28,10 @@
               <p class="desc" v-html="item.dissname"></p>
             </li>
           </ul>
+          <loading v-show="dissList.length"></loading>
         </div>
       </div>
+      <loading v-show="!dissList.length"></loading>
     </scroll>
   </div>
 </template>
@@ -38,6 +40,7 @@
 
 import Scroll from '@/base/scroll/scroll';
 import Slider from '@/base/slider/slider';
+import Loading from '@/base/loading/loading';
 import {getRecommend, getDissList} from '@/api/recommend.js';
 import {ERR_OK} from '@/api/config.js';
 
@@ -85,7 +88,8 @@ export default {
   },
   components: {
     Slider,
-    Scroll
+    Scroll,
+    Loading
   }
 };
 
