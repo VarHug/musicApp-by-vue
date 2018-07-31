@@ -16,14 +16,22 @@
         <li class="item" v-for="(item, index) in shortcutList" :key="index" :data-index="index" :class="{'current': curIndex === index}">{{item}}</li>
       </ul>
     </div>
+    <div class="list-fixed" v-show="fixedTitle" ref="listFixed">
+      <h1 class="fixed-title">{{fixedTitle}}</h1>
+    </div>
+    <div class="loading-container" v-show="!data.length">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 
 <script type="text/ecmascript-6">
 import Scroll from '@/base/scroll/scroll';
 import {getData} from '@/common/js/dom.js';
+import Loading from '@/base/loading/loading';
 
 const ANCHOR_HEIGHT = 18;
+const TITLE_HEIGHT = 30;
 
 export default {
   props: {
@@ -41,7 +49,8 @@ export default {
   data() {
     return {
       scrollY: -1,
-      curIndex: 0
+      curIndex: 0,
+      diff: -1
     };
   },
   computed: {
@@ -49,6 +58,12 @@ export default {
       return this.data.map(group => {
         return group.title.substr(0, 1);
       });
+    },
+    fixedTitle() {
+      if (this.scrollY > 0) {
+        return '';
+      }
+      return this.data[this.curIndex] ? this.data[this.curIndex].title : '';
     }
   },
   methods: {
@@ -114,15 +129,25 @@ export default {
         let high = listHeight[i + 1];
         if (-newY >= low && -newY < high) {
           this.curIndex = i;
+          this.diff = high + newY; // - (-newY)
           return;
         }
       }
       // 当滚动到底部时,-newY大于最后一个元素的high(上限)
       this.curIndex = listHeight.length - 2;
+    },
+    diff(newVal) {
+      let fixedTitleTransformY = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0;
+      if (this.fixedTitleTransformY === fixedTitleTransformY) {
+        return;
+      }
+      this.fixedTitleTransformY = fixedTitleTransformY;
+      this.$refs.listFixed.style.transform = `translate3d(0, ${fixedTitleTransformY}px, 0)`;
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Loading
   }
 };
 
@@ -195,8 +220,8 @@ export default {
         line-height 30px
         padding-left 20px
         font-size $font-size-small
-        color $color-text-l
-        background $color-highlight-background
+        color $color-text-white
+        background $color-background-red
     .loading-container
       position absolute
       width 100%
