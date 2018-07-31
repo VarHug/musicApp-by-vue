@@ -11,7 +11,7 @@
         </ul>
       </li>
     </ul>
-    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart($event)" @touchmove.stop.prevent="onShortcutTouchMove">
+    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart($event)" @touchmove.stop.prevent="onShortcutTouchMove" @touchend.stop.prevent="onShortcutTouchEnd">
       <ul>
         <li class="item" v-for="(item, index) in shortcutList" :key="index" :data-index="index" :class="{'current': curIndex === index}">{{item}}</li>
       </ul>
@@ -22,6 +22,7 @@
     <div class="loading-container" v-show="!data.length">
       <loading></loading>
     </div>
+    <div class="bubble" v-show="bubbleShow">{{fixedTitle.substr(0, 1)}}</div>
   </scroll>
 </template>
 
@@ -50,7 +51,8 @@ export default {
     return {
       scrollY: -1,
       curIndex: 0,
-      diff: -1
+      diff: -1,
+      bubbleShow: false
     };
   },
   computed: {
@@ -68,6 +70,7 @@ export default {
   },
   methods: {
     onShortcutTouchStart(e) {
+      this.bubbleShow = true;
       let anchorIndex = getData(e.target, 'index');
       let firstTouch = e.touches[0];
       this.touch.y1 = firstTouch.pageY;
@@ -80,6 +83,9 @@ export default {
       let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0;
       let anchorIndex = parseInt(this.touch.anchorIndex) + delta;
       this._scrollToElement(anchorIndex);
+    },
+    onShortcutTouchEnd() {
+      this.bubbleShow = false;
     },
     scroll(pos) {
       this.scrollY = pos.y;
@@ -227,4 +233,16 @@ export default {
       width 100%
       top 50%
       transform translateY(-50%)
+    .bubble
+      position absolute
+      top 50%
+      left 50%
+      transform translate3d(-50%, -50%, 0)
+      width 50px
+      height 50px
+      line-height 50px
+      border-radius 50%
+      text-align center
+      color $color-text-white-hover
+      background $color-background-red
 </style>
