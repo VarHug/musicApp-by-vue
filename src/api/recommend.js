@@ -15,7 +15,7 @@ export function getRecommend() {
 }
 
 export function getDissList(opts) {
-  const url = 'api/getDissList';
+  const url = '/api/getDissList';
 
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',

@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-    <list-view :data="singers"></list-view>
+    <list-view :data="singers" @select="selectSinger"></list-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -9,6 +10,7 @@ import {getSingerList, getSingerListNew} from '@/api/singer.js';
 import {ERR_OK} from '@/api/config.js';
 import Singer from '@/common/js/Singer.js';
 import ListView from '@/base/listview/listview';
+import {mapMutations} from 'vuex';
 
 const HOT_NAME = '热门';
 const HOT_NUM = 10;
@@ -24,6 +26,12 @@ export default {
     this._getSingerList();
   },
   methods: {
+    selectSinger(singer) {
+      this.$router.push({
+        path: `/singer/${singer.id}`
+      });
+      this.setSinger(singer);
+    },
     _getSingerList() {
       getSingerList().then(res => {
         if (res.code === ERR_OK) {
@@ -47,7 +55,7 @@ export default {
       };
       list.forEach((item, index) => {
         if (index < HOT_NUM) {
-          map.hot.items.push(new Singer(item.Fsinger_id, item.Fsinger_name, item.Fsinger_mid));
+          map.hot.items.push(new Singer(item.Fsinger_mid, item.Fsinger_name));
         }
         const key = item.Findex; // 姓名首字母
         if (!map[key]) {
@@ -56,7 +64,7 @@ export default {
             items: []
           };
         }
-        map[key].items.push(new Singer(item.Fsinger_id, item.Fsinger_name, item.Fsinger_mid));
+        map[key].items.push(new Singer(item.Fsinger_mid, item.Fsinger_name));
       });
       // 将无序对象转换为有序列表
       let hot = [];
@@ -73,7 +81,10 @@ export default {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0);
       });
       return hot.concat(ret);
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   },
   components: {
     ListView

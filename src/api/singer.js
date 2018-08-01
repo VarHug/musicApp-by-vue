@@ -50,3 +50,23 @@ export function getSingerListNew() {
     name: `getUCGI${num}`
   }));
 }
+
+export function getSingerDetail(singerMid) {
+  const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg';
+
+  const data = Object.assign({}, commonParams, {
+    g_tk: 1928093487,
+    hostUin: 0,
+    platform: 'yqq',
+    needNewCode: 0,
+    order: 'listen',
+    begin: 0,
+    num: 80,
+    songstatus: 1,
+    singermid: singerMid
+  });
+
+  return jsonp(url, data, setOptions({
+    name: 'getSingerDetail'
+  }));
+}
