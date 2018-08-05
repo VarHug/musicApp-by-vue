@@ -141,7 +141,7 @@ export default {
           color $color-text
           .icon
             font-size $font-size-small-s
-            color $color-text-white
+            color $color-text-white-shallow
         .list
           .item
             display inline-block

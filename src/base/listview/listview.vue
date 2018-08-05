@@ -179,7 +179,7 @@ export default {
         line-height 30px
         padding-left 20px
         font-size $font-size-small
-        color $color-text-white
+        color $color-text-white-shallow
         background $color-background-red
       .list-group-item
         display flex
@@ -214,10 +214,10 @@ export default {
       .item
         padding 3px
         line-height 1
-        color $color-text-white
+        color $color-text-white-shallow
         font-size $font-size-small
         &.current
-          color $color-text-white-hover
+          color $color-text-white
           font-weight bold
     .list-fixed
       position absolute
@@ -229,7 +229,7 @@ export default {
         line-height 30px
         padding-left 20px
         font-size $font-size-small
-        color $color-text-white
+        color $color-text-white-shallow
         background $color-background-red
     .loading-container
       position absolute
@@ -246,6 +246,6 @@ export default {
       line-height 50px
       border-radius 50%
       text-align center
-      color $color-text-white-hover
+      color $color-text-white
       background $color-background-red
 </style>

@@ -4,6 +4,27 @@ import {ERR_OK} from '@/api/config.js';
 import {getUid} from '@/common/js/uid';
 import { Promise } from 'core-js';
 
+export function getLyric(mid) {
+  const url = '/api/getLyric';
+
+  const data = Object.assign({}, commonParams, {
+    songmid: mid,
+    pcachetime: +new Date(),
+    platform: 'yqq',
+    hostUin: 0,
+    needNewCode: 0,
+    categoryId: 10000000,
+    format: 'json',
+    g_tk: 1928093487
+  });
+
+  return axios.get(url, {
+    params: data
+  }).then(res => {
+    return Promise.resolve(res.data);
+  });
+}
+
 export function getSongsUrl(songs) {
   const url = '/api/getPurlUrl';
 

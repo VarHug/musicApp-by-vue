@@ -65,15 +65,15 @@
       flex: 1
       text-align: center
       .tab-link
-        color $color-text-white
+        color $color-text-white-shallow
         padding-bottom: 5px
       &.router-link-active
         .tab-link
-          color: $color-text-white-hover
+          color: $color-text-white
     .border
       position absolute
       width 40px
       height 35px
-      border-bottom 1px solid $color-text-white
+      border-bottom 1px solid $color-text-white-shallow
       transition left .3s
 </style>

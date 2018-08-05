@@ -28,7 +28,7 @@ export default {
   methods: {
     selectSinger(singer) {
       this.$router.push({
-        path: `/singer/${singer.id}`
+        path: `/singer/${singer.mid}`
       });
       this.setSinger(singer);
     },

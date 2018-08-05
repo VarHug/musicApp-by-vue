@@ -25,7 +25,7 @@
     height: 64px
     padding-top 15px
     text-align: center
-    color $color-text-white-hover
+    color $color-text-white
     font-size: 0
     background-color $color-background-red
     box-sizing border-box

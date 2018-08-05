@@ -5,18 +5,21 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <player></player>
   </div>
 </template>
 
 <script>
 import MHeader from 'components/m-header/m-header';
 import TabMusic from 'components/tab-music/tab-music';
+import Player from 'components/player/player';
 
 export default {
   name: 'App',
   components: {
     MHeader,
-    TabMusic
+    TabMusic,
+    Player
   }
 };
 </script>

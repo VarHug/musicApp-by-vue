@@ -6,7 +6,7 @@
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImage">
       <div class="play-wrapper">
-        <div class="play" v-show="songsList.length > 0" ref="playBtn">
+        <div class="play" v-show="songsList.length > 0" ref="playBtn" @click="random">
           <i class="icon-play-random"></i>
           <span class="text">随机播放全部</span>
         </div>
@@ -16,7 +16,7 @@
     <div class="bg-layer" ref="layer"></div>
     <scroll :data="songsList" class="list" ref="list" :listen-scroll="listenScroll" :probe-type="probeType" @scroll="scroll">
       <div class="song-list-wrapper">
-        <song-list :songs-list="songsList"></song-list>
+        <song-list :songs-list="songsList" @select="selectItem"></song-list>
       </div>
       <div class="loading-container" v-show="!songsList.length">
         <loading></loading>
@@ -30,6 +30,7 @@ import Scroll from '@/base/scroll/scroll';
 import SongList from '@/base/song-list/song-list';
 import {prefix} from '@/common/js/dom.js';
 import Loading from '@/base/loading/loading';
+import {mapActions} from 'vuex';
 
 const RESERVED_HEIGHT = 50;
 const transform = prefix('transform');
@@ -76,7 +77,22 @@ export default {
     },
     back() {
       this.$router.back();
-    }
+    },
+    selectItem(song, index) {
+      this.selectPlay({
+        list: this.songsList,
+        index: index
+      });
+    },
+    random() {
+      this.randomPlay({
+        list: this.songsList
+      });
+    },
+    ...mapActions([
+      'selectPlay',
+      'randomPlay'
+    ])
   },
   watch: {
     scrollY(newY) {
@@ -143,7 +159,7 @@ export default {
         display block
         padding 10px
         font-size $font-size-large
-        color $color-text-white-hover
+        color $color-text-white
     .title
       position absolute
       top 0
@@ -154,7 +170,7 @@ export default {
       text-indent 1em
       line-height 40px
       font-size $font-size-large
-      color $color-text-white-hover
+      color $color-text-white
     .bg-image
       position relative
       width 100%
@@ -173,7 +189,7 @@ export default {
           padding 7px 0
           margin 0 auto
           text-align center
-          color $color-text-white
+          color $color-text-white-shallow
           background $color-background-red
           border-radius 100px
           font-size 0

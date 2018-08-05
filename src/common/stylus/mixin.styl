@@ -16,6 +16,18 @@ border-1px($color)
     border-top 1px solid $color
     content ' '
 
+// 1px上边框
+border-1px-top($color)
+  position relative
+  &:after
+    display block
+    position absolute
+    top 0
+    left 0
+    width 100%
+    border-top 1px solid $color
+    content ''
+
 // 无边框
 border-none()
   &:after
