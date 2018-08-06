@@ -77,7 +77,6 @@ export default {
       this._getDissList();
     },
     selectDiss(diss) {
-      console.log(diss);
       this.$router.push({
         path: `/recommend/${diss.dissid}`
       });

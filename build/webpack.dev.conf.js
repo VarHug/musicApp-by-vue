@@ -56,6 +56,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     before(app) {
       app.use(bodyParser.urlencoded({extended: true}))
 
+      // 歌单数据
       app.get('/api/getDissList', function (req, res) {
         const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
         axios.get(url, {
@@ -71,6 +72,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       })
 
+      // 歌曲URL
       app.post('/api/getPurlUrl', bodyParser.json(), function (req, res) {
         const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
         axios.post(url, req.body, {
@@ -86,6 +88,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       })
 
+      //歌词数据
       app.get('/api/getLyric', function (req, res) {
         const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
         axios.get(url, {
@@ -109,6 +112,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       })
 
+      // 歌单详情数据
       app.get('/api/getCdInfo', function (req, res) {
         const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
         axios.get(url, {
@@ -127,6 +131,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             }
           }
           res.json(ret);
+        }).catch(e => {
+          console.log(e);
+        })
+      })
+
+      // 排行榜数据
+      app.get('/api/getTop', function (req, res) {
+        const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg';
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data);
         }).catch(e => {
           console.log(e);
         })
