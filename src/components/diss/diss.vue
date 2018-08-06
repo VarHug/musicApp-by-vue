@@ -1,15 +1,15 @@
 <template>
   <transition name="slide">
-    <music-list :songs-list="songsList" :title="title" :bg-image="bgImage"></music-list>
+    <music-list :title="title" :bg-image="bgImage" :songs-list="songsList"></music-list>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
+import MusicList from '@/components/music-list/music-list';
 import {mapGetters} from 'vuex';
-import {getSingerDetail} from '@/api/singer.js';
+import {getDissSongList} from '@/api/diss.js';
 import {ERR_OK} from '@/api/config.js';
 import {createSong, isValidMusic, processSongsUrl} from '@/common/js/Song.js';
-import MusicList from '@/components/music-list/music-list';
 
 export default {
   data() {
@@ -17,29 +17,30 @@ export default {
       songsList: []
     };
   },
-  created() {
-    this._getSingerDetail();
-  },
   computed: {
     title() {
-      return this.singer.name;
+      return this.diss.dissname;
     },
     bgImage() {
-      return this.singer.avatar;
+      return this.diss.imgurl;
     },
     ...mapGetters([
-      'singer'
+      'diss'
     ])
   },
+  created() {
+    this._getDissSongList();
+  },
   methods: {
-    _getSingerDetail() {
-      if (!this.singer.mid) {
-        this.$router.push('/singer');
+    _getDissSongList() {
+      if (!this.diss.dissid) {
+        this.$router.push('/recommend');
         return;
       }
-      getSingerDetail(this.singer.mid).then(res => {
+      getDissSongList(this.diss.dissid).then(res => {
         if (res.code === ERR_OK) {
-          let normalList = this._normallizeSongsList(res.data.list);
+          console.log(res);
+          let normalList = this._normallizeSongsList(res.cdlist[0].songlist);
           processSongsUrl(normalList).then(songs => {
             this.songsList = songs;
           });
@@ -48,8 +49,7 @@ export default {
     },
     _normallizeSongsList(list) {
       let res = [];
-      list.forEach(item => {
-        let {musicData} = item;
+      list.forEach(musicData => {
         if (isValidMusic(musicData)) {
           res.push(createSong(musicData));
         }
@@ -64,10 +64,8 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-
   .slide-enter-active, .slide-leave-active
     transition all .3s
   .slide-enter, .slide-leave-to
     transform translate3d(100%, 0, 0)
-
 </style>

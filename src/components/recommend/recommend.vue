@@ -1,6 +1,6 @@
 <template>
-  <div class="recommend">
-    <scroll class="recommend-content" :data="dissList" :pullup="pullup" @scrollToEnd="loadDissList">
+  <div class="recommend" ref="recommend">
+    <scroll class="recommend-content" :data="dissList" :pullup="pullup" @scrollToEnd="loadDissList" ref="recommendContent">
       <div>
         <div v-if="recommends.length" class="slider-wrapper">
           <div class="slider-bg"></div>
@@ -21,7 +21,7 @@
             <i class="icon icon-arrow-right"></i>
           </h1>
           <ul v-if="dissList.length" class="list">
-            <li v-for="(item, index) in dissList" :key="index" class="item" ref="item">
+            <li v-for="(item, index) in dissList" :key="index" class="item" ref="item" @click="selectDiss(item)">
               <div class="img-wrapper">
                 <img v-lazy="item.imgurl">
               </div>
@@ -33,6 +33,7 @@
       </div>
       <loading v-show="!dissList.length"></loading>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -43,8 +44,13 @@ import Slider from '@/base/slider/slider';
 import Loading from '@/base/loading/loading';
 import {getRecommend, getDissList} from '@/api/recommend.js';
 import {ERR_OK} from '@/api/config.js';
+import {playlistMixin} from '../../common/js/mixin.js';
+import {mapMutations} from 'vuex';
 
 export default {
+  mixins: [
+    playlistMixin
+  ],
   data() {
     return {
       pullup: true,
@@ -59,10 +65,24 @@ export default {
     this._getRecommend();
     this._getDissList();
   },
-  mounted() {
-
-  },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : '';
+      this.$refs.recommend.style.bottom = bottom;
+      this.$refs.recommendContent.refresh();
+    },
+    loadDissList() {
+      this.sin += 9;
+      this.ein += 9;
+      this._getDissList();
+    },
+    selectDiss(diss) {
+      console.log(diss);
+      this.$router.push({
+        path: `/recommend/${diss.dissid}`
+      });
+      this.setDiss(diss);
+    },
     _getRecommend() {
       getRecommend().then(res => {
         if (res.code === ERR_OK) {
@@ -80,11 +100,9 @@ export default {
         }
       });
     },
-    loadDissList() {
-      this.sin += 9;
-      this.ein += 9;
-      this._getDissList();
-    }
+    ...mapMutations({
+      setDiss: 'SET_DISS'
+    })
   },
   components: {
     Slider,

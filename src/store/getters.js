@@ -15,3 +15,5 @@ export const curIndex = state => state.curIndex;
 export const curSong = (state) => {
   return state.playlist[state.curIndex] || {};
 };
+
+export const diss = state => state.diss;

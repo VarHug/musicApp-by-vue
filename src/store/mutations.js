@@ -21,6 +21,9 @@ const mutations = {
   },
   [types.SET_CUR_INDEX](state, index) {
     state.curIndex = index;
+  },
+  [types.SET_DISS](state, diss) {
+    state.diss = diss;
   }
 };
 

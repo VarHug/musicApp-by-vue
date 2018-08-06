@@ -11,3 +11,5 @@ export const SET_SEQUENCE_LIST = 'SET_SEQUENCE_LIST';
 export const SET_PLAY_MODE = 'SET_PLAY_MODE';
 
 export const SET_CUR_INDEX = 'SET_CUR_INDEX';
+
+export const SET_DISS = 'SET_DISS';

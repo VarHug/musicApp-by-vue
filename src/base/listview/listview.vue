@@ -93,6 +93,9 @@ export default {
     selectItem(item) {
       this.$emit('select', item);
     },
+    refresh() {
+      this.$refs.listview.refresh();
+    },
     _scrollToElement(index) {
       // 点击list-shortcut的padding区域时
       if (!index && index !== 0) {
