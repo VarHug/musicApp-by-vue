@@ -1,45 +1,48 @@
 <template>
   <transition name="slide">
-    <music-list :title="title" :bg-image="bgImage" :songs-list="songsList"></music-list>
+    <music-list :title="title" :bg-image="bgImage" :songs-list="songsList" :rank="rank"></music-list>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
 import MusicList from '@/components/music-list/music-list';
 import {mapGetters} from 'vuex';
-import {getDissSongList} from '@/api/diss.js';
+import {getMusicList} from '@/api/rank.js';
 import {ERR_OK} from '@/api/config.js';
 import {createSong, isValidMusic, processSongsUrl} from '@/common/js/Song.js';
 
 export default {
   data() {
     return {
-      songsList: []
+      songsList: [],
+      rank: true
     };
   },
   computed: {
     title() {
-      return this.diss.dissname;
+      return this.topList.topTitle;
     },
     bgImage() {
-      return this.diss.imgurl;
+      if (this.songsList.length) {
+        return this.songsList[0].image;
+      }
     },
     ...mapGetters([
-      'diss'
+      'topList'
     ])
   },
   created() {
-    this._getDissSongList();
+    this._getMusicList();
   },
   methods: {
-    _getDissSongList() {
-      if (!this.diss.dissid) {
-        this.$router.push('/recommend');
+    _getMusicList() {
+      if (!this.topList.id) {
+        this.$router.push('/rank');
         return;
       }
-      getDissSongList(this.diss.dissid).then(res => {
+      getMusicList(this.topList.id).then(res => {
         if (res.code === ERR_OK) {
-          let normalList = this._normallizeSongsList(res.cdlist[0].songlist);
+          let normalList = this._normallizeSongsList(res.songlist);
           processSongsUrl(normalList).then(songs => {
             this.songsList = songs;
           });
@@ -48,7 +51,8 @@ export default {
     },
     _normallizeSongsList(list) {
       let res = [];
-      list.forEach(musicData => {
+      list.forEach(item => {
+        const musicData = item.data;
         if (isValidMusic(musicData)) {
           res.push(createSong(musicData));
         }
