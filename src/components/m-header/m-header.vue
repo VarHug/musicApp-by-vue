@@ -6,14 +6,13 @@
     <div class="icon-wrapper">
       <i class="icon icon-songlist"></i>
     </div>
-    <div class="search">
+    <router-link tag="div" class="search" to="/search">
       <i class="icon icon-search"></i>
-    </div>
+    </router-link>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  export default {};
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
@@ -37,6 +36,7 @@
       left 10px
     .search
       position absolute
-      top 15px
-      right 10px
+      top 10px
+      right 5px
+      padding 5px
 </style>

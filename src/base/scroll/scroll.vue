@@ -35,6 +35,10 @@ export default {
     listenScroll: {
       type: Boolean,
       default: false
+    },
+    beforeScroll: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -79,6 +83,12 @@ export default {
           if (pos.y > 50) {
             this.$emit('pulldown');
           }
+        });
+      }
+
+      if (this.beforeScroll) {
+        this.scroll.on('beforeScrollStart', () => {
+          this.$emit('beforeScroll');
         });
       }
     },
