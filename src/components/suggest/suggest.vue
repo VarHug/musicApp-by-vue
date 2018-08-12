@@ -16,7 +16,7 @@
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
-      <loading v-show="loadingShow" title=""></loading>
+      <loading v-show="hasMore" title=""></loading>
     </ul>
     <div class="no-result-wrapper" v-show="!hasMore && !result.length">
       <no-result :text="query"></no-result>
@@ -113,9 +113,13 @@ export default {
       } else {
         this.insertSong(item);
       }
+      this.$emit('select');
     },
     listScroll() {
       this.$emit('listScroll');
+    },
+    refresh() {
+      this.$refs.suggest.refresh();
     },
     // 处理返回数据
     _genResult(data) {

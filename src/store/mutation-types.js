@@ -15,3 +15,5 @@ export const SET_CUR_INDEX = 'SET_CUR_INDEX';
 export const SET_DISS = 'SET_DISS';
 
 export const SET_TOP_LIST = 'SET_TOP_LIST';
+
+export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY';

@@ -1,6 +1,7 @@
 import * as types from './mutation-types';
 import {playMode} from '@/common/js/config.js';
 import {shuffle} from '@/common/js/util.js';
+import {saveSearch, deleteSearch, clearSearch} from '@/common/js/cache';
 
 /**
  * 查找歌曲是否存在在歌曲列表中
@@ -87,4 +88,16 @@ export const insertSong = function ({commit, state}, song) {
   commit(types.SET_CUR_INDEX, curIndex);
   commit(types.SET_FULL_SCREEN, true);
   commit(types.SET_PLAYING_STATE, true);
+};
+
+export const saveSearchHistory = function ({commit}, query) {
+  commit(types.SET_SEARCH_HISTORY, saveSearch(query));
+};
+
+export const deleteSearchHistory = function ({commit}, query) {
+  commit(types.SET_SEARCH_HISTORY, deleteSearch(query));
+};
+
+export const clearSearchHistory = function ({commit}) {
+  commit(types.SET_SEARCH_HISTORY, clearSearch());
 };

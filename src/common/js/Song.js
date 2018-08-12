@@ -47,7 +47,7 @@ export function createSong(musicData) {
 }
 
 export function isValidMusic(musicData) {
-  return musicData.songid && musicData.albummid;
+  return musicData.songid && musicData.albummid && (!musicData.pay || musicData.pay.payalbumprice === 0);
   // 氪金验证：!musicData.pay || musicData.pay.payalbumprice === 0
 }
 
