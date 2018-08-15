@@ -1,7 +1,7 @@
 import * as types from './mutation-types';
 import {playMode} from '@/common/js/config.js';
 import {shuffle} from '@/common/js/util.js';
-import {saveSearch, deleteSearch, clearSearch} from '@/common/js/cache';
+import {saveSearch, deleteSearch, clearSearch, savePlay} from '@/common/js/cache';
 
 /**
  * 查找歌曲是否存在在歌曲列表中
@@ -90,6 +90,38 @@ export const insertSong = function ({commit, state}, song) {
   commit(types.SET_PLAYING_STATE, true);
 };
 
+export const deleteSong = function ({commit, state}, song) {
+  let playlist = state.playlist.slice();
+  let sequenceList = state.sequenceList.slice();
+  let curIndex = state.curIndex;
+
+  // 当前播放的歌曲在播放列表中的索引
+  let pIndex = findIndex(playlist, song);
+  playlist.splice(pIndex, 1);
+  // 当前播放的歌曲在顺序列表中的索引
+  let sIndex = findIndex(sequenceList, song);
+  sequenceList.splice(sIndex, 1);
+
+  if (curIndex > pIndex || curIndex === playlist.length) {
+    curIndex--;
+  }
+
+  commit(types.SET_PLAYLIST, playlist);
+  commit(types.SET_SEQUENCE_LIST, sequenceList);
+  commit(types.SET_CUR_INDEX, curIndex);
+
+  const playingState = playlist.length > 0;
+
+  commit(types.SET_PLAYING_STATE, playingState);
+};
+
+export const deleteSongList = function ({commit}) {
+  commit(types.SET_PLAYLIST, []);
+  commit(types.SET_SEQUENCE_LIST, []);
+  commit(types.SET_CUR_INDEX, -1);
+  commit(types.SET_PLAYING_STATE, false);
+};
+
 export const saveSearchHistory = function ({commit}, query) {
   commit(types.SET_SEARCH_HISTORY, saveSearch(query));
 };
@@ -100,4 +132,8 @@ export const deleteSearchHistory = function ({commit}, query) {
 
 export const clearSearchHistory = function ({commit}) {
   commit(types.SET_SEARCH_HISTORY, clearSearch());
+};
+
+export const savePlayHistory = function ({commit}, song) {
+  commit(types.SET_PLAY_HISTORY, savePlay(song));
 };

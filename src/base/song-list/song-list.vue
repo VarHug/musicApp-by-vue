@@ -2,7 +2,7 @@
   <div class="song-list">
     <ul>
       <li v-for="(song, index) in songsList" :key="index" class="item" @click="selectItem(song, index)">
-        <div class="rank">
+        <div class="rank" v-show="rankNumShow">
           <span :class="getRankCls(index)">{{getRankText(index)}}</span>
         </div>
         <div class="content">
@@ -20,6 +20,10 @@ export default {
     songsList: {
       type: Array,
       default: () => []
+    },
+    rankNumShow: {
+      type: Boolean,
+      default: true
     },
     rank: {
       type: Boolean,

@@ -89,31 +89,36 @@
           <i class="icon icon-mini" :class="playIcon" @click.stop="togglePlaying"></i>
         </progress-circle>
       </div>
-      <div class="control">
+      <div class="control" @click.stop="showPlaylist">
         <i class="icon icon-playlist"></i>
       </div>
     </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import animations from 'create-keyframe-animation';
 import {prefix} from '@/common/js/dom.js';
 import ProgressBar from '@/base/progress-bar/progress-bar';
 import ProgressCircle from '@/base/progress-circle/progress-circle';
 import Scroll from '@/base/scroll/scroll';
 import {playMode} from '@/common/js/config.js';
-import {shuffle} from '@/common/js/util.js';
 import Lyric from 'lyric-parser';
+import Playlist from '@/components/playlist/playlist';
+import {playerMixin} from '@/common/js/mixin.js';
 
 const transform = prefix('transform');
 const transitionDuration = prefix('transitionDuration');
 const timeExp = /\[(\d{2}):(\d{2}):(\d{2})]/g; // [00:00:00]
 
 export default {
+  mixins: [
+    playerMixin
+  ],
   data() {
     return {
       songReady: false,
@@ -140,23 +145,10 @@ export default {
     percent() {
       return this.curTime / this.curSong.duration;
     },
-    iconMode() {
-      if (this.mode === playMode.sequence) {
-        return 'icon-play-list';
-      } else if (this.mode === playMode.loop) {
-        return 'icon-play-singal';
-      } else {
-        return 'icon-play-random';
-      }
-    },
     ...mapGetters([
       'fullScreen',
-      'playlist',
-      'curSong',
       'playing',
-      'curIndex',
-      'mode',
-      'sequenceList'
+      'curIndex'
     ])
   },
   created() {
@@ -288,6 +280,7 @@ export default {
       // 监听 playing 这个事件可以确保慢网速或者快速切换歌曲导致的 DOM Exception
       this.songReady = true;
       this.canLyricPlay = true;
+      this.savePlayHistory(this.curSong);
       // 如果歌曲的播放晚于歌词的出现，播放的时候需要同步歌词
       if (this.curLyric && !this.isPureMusic) {
         this.curLyric.seek(this.curTime * 1000);
@@ -308,18 +301,6 @@ export default {
       if (this.curLyric) {
         this.curLyric.seek(time * 1000);
       }
-    },
-    changeMode() {
-      const mode = (this.mode + 1) % 3;
-      this.setPlayMode(mode);
-      let list = null;
-      if (this.mode === playMode.random) {
-        list = shuffle(this.sequenceList);
-      } else {
-        list = this.sequenceList;
-      }
-      this._resetCurIndex(list);
-      this.setPlayList(list);
     },
     // 格式化时间
     format(interval) {
@@ -414,6 +395,9 @@ export default {
       this.$refs.middleL.style.opacity = opacity;
       this.$refs.middleL.style[transitionDuration] = `${time}ms`;
     },
+    showPlaylist() {
+      this.$refs.playlist.show();
+    },
     /**
      * // 用0补位
      * @param {Number} num // 补位数字
@@ -444,20 +428,16 @@ export default {
         scale
       };
     },
-    // curIndex随歌曲模式切换而改变，从而保证在切换模式时当前播放的歌曲不变
-    _resetCurIndex(list) {
-      let index = list.findIndex((item) => {
-        return item.id === this.curSong.id;
-      });
-      this.setCurIndex(index);
-    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       setPlayingState: 'SET_PLAYING_STATE',
       setCurIndex: 'SET_CUR_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlayList: 'SET_PLAYLIST'
-    })
+    }),
+    ...mapActions([
+      'savePlayHistory'
+    ])
   },
   watch: {
     curSong(newSong, oldSong) {
@@ -501,7 +481,8 @@ export default {
   components: {
     ProgressBar,
     ProgressCircle,
-    Scroll
+    Scroll,
+    Playlist
   }
 };
 </script>
