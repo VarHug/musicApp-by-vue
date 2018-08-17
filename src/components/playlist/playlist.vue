@@ -14,8 +14,8 @@
           <li class="item" v-for="(item, index) in sequenceList" :key="item.id" @click="selectItem(item, index)" ref="listItem">
             <i :class="getCurrentIcon(item)"></i>
             <span class="text" :class="getCurrent(item)">{{item.name}}<span class="singername"> - {{item.singer}}</span></span>
-            <span class="like">
-              <i class="icon-not-favorite"></i>
+            <span class="like" @click.stop="toggleFavorite(item)">
+              <i :class="getFavoriteIcon(item)"></i>
             </span>
             <span class="delete" @click.stop="deleteOne(item)">
               <i class="icon-dismiss"></i>
@@ -106,8 +106,8 @@ export default {
       const index = this.sequenceList.findIndex((song) => {
         return current.id === song.id;
       });
-      console.log(this.$refs.listItem);
-      console.log(this.$refs.list.$el.children);
+      // console.log(this.$refs.listItem);
+      // console.log(this.$refs.list.$el.children);
       this.$refs.listContent.scrollToElement(this.$refs.list.$el.children[index], 300);
     },
     showConfirm() {

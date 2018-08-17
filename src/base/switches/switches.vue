@@ -66,20 +66,21 @@ export default {
     display: flex
     align-items: center
     margin: 0 auto
-    background $color-background-red
+    background $color-background
     .switch-item
       flex: 1
       padding: 8px
       text-align: center
       font-size: $font-size-medium
-      color: $color-text-l
+      color: $color-text-grey
+      font-weight bold
       &.active
-        color: $color-text-white
+        color: $color-sub-theme
     .border
       position absolute
       bottom 3px
       width 50px
       height 35px
-      border-bottom 1px solid $color-text-white-shallow
+      border-bottom 1px solid $color-sub-theme
       transition left .3s
 </style>

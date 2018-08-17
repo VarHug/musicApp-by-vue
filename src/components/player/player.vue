@@ -68,8 +68,8 @@
           <div class="icon i-right" :class="disableCls">
             <i class="icon-song-next" @click="next"></i>
           </div>
-          <div class="icon i-right">
-            <i class="icon-love"></i>
+          <div class="icon i-right" @click="toggleFavorite(curSong)">
+            <i :class="getFavoriteIcon(curSong)"></i>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@
     </div>
     </transition>
     <playlist ref="playlist"></playlist>
-    <audio ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+    <audio ref="audio" @playing="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -232,6 +232,7 @@ export default {
     loop() {
       this.$refs.audio.currentTime = 0;
       this.$refs.audio.play();
+      this.setPlayingState(true);
       if (this.curLyric) {
         this.curLyric.seek(0);
       }
@@ -242,6 +243,7 @@ export default {
       }
       if (this.playlist.length === 1) {
         this.loop();
+        return;
       } else {
         let index = this.curIndex - 1;
         if (index < 0) {
@@ -262,6 +264,7 @@ export default {
       // 播放列表只有一首歌
       if (this.playlist.length === 1) {
         this.loop();
+        return;
       } else {
         let index = this.curIndex + 1;
         if (index === this.playlist.length) {
@@ -394,6 +397,7 @@ export default {
       this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`;
       this.$refs.middleL.style.opacity = opacity;
       this.$refs.middleL.style[transitionDuration] = `${time}ms`;
+      this.touch.initiated = false;
     },
     showPlaylist() {
       this.$refs.playlist.show();

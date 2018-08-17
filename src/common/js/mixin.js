@@ -41,7 +41,8 @@ export const playerMixin = {
       'sequenceList',
       'curSong',
       'mode',
-      'playlist'
+      'playlist',
+      'favoriteList'
     ])
   },
   methods: {
@@ -57,6 +58,26 @@ export const playerMixin = {
       this._resetCurIndex(list);
       this.setPlayList(list);
     },
+    getFavoriteIcon(song) {
+      if (this.isFavorite(song)) {
+        return 'icon-favorite';
+      } else {
+        return 'icon-not-favorite';
+      }
+    },
+    toggleFavorite(song) {
+      if (this.isFavorite(song)) {
+        this.deleteFavoriteList(song);
+      } else {
+        this.saveFavoriteList(song);
+      }
+    },
+    isFavorite(song) {
+      const index = this.favoriteList.findIndex((item) => {
+        return item.id === song.id;
+      });
+      return index > -1;
+    },
     // curIndex随歌曲模式切换而改变，从而保证在切换模式时当前播放的歌曲不变
     _resetCurIndex(list) {
       let index = list.findIndex((item) => {
@@ -69,7 +90,11 @@ export const playerMixin = {
       setCurIndex: 'SET_CUR_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlayList: 'SET_PLAYLIST'
-    })
+    }),
+    ...mapActions([
+      'saveFavoriteList',
+      'deleteFavoriteList'
+    ])
   }
 };
 

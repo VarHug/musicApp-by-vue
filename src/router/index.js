@@ -7,6 +7,7 @@ import SingerDetail from 'components/singer-detail/singer-detail.vue';
 import Diss from 'components/diss/diss.vue';
 import TopList from 'components/top-list/top-list.vue';
 import Search from 'components/search/search';
+import UserCenter from 'components/user-center/user-center.vue';
 
 Vue.use(Router);
 
@@ -42,5 +43,8 @@ export default new Router({
       path: ':id',
       component: SingerDetail
     }]
+  }, {
+    path: '/user',
+    component: UserCenter
   }]
 });
