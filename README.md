@@ -22,6 +22,22 @@
   </tbody>
 </table>
 
+<h2>项目参考</h2>
+<table>
+  <thead>
+    <tr>
+      <td>名称</td>
+      <td>地址</td>
+    </td>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Vue 2.0实战高级-开发移动端音乐Web APP</td>
+      <td>https://coding.imooc.com/class/107.html</td>
+    </td>
+  </tbody>
+</table>
+
 ## 项目安装
 
 ``` bash
