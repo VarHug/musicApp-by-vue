@@ -4,10 +4,11 @@ import Recommend from 'components/recommend/recommend.vue';
 import Singer from 'components/singer/singer.vue';
 import Rank from 'components/rank/rank.vue';
 import SingerDetail from 'components/singer-detail/singer-detail.vue';
-import Diss from 'components/diss/diss.vue';
+import DissDeatil from 'components/diss-detail/diss-detail.vue';
 import TopList from 'components/top-list/top-list.vue';
 import Search from 'components/search/search';
 import UserCenter from 'components/user-center/user-center.vue';
+import Diss from 'components/diss/diss.vue';
 
 Vue.use(Router);
 
@@ -20,8 +21,11 @@ export default new Router({
     component: Recommend,
     children: [{
       path: ':id',
-      component: Diss
+      component: DissDeatil
     }]
+  }, {
+    path: '/diss',
+    component: Diss
   }, {
     path: '/singer',
     component: Singer,

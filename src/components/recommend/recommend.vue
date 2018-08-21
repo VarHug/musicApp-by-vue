@@ -16,10 +16,10 @@
           </div>
         </div>
         <div class="recommend-list" ref="recommendList">
-          <h1 class="list-title">
+          <router-link tag="h1" class="list-title" to="/diss">
             热门歌单推荐
             <i class="icon icon-arrow-right"></i>
-          </h1>
+          </router-link>
           <ul v-if="dissList.length" class="list">
             <li v-for="(item, index) in dissList" :key="index" class="item" ref="item" @click="selectDiss(item)">
               <div class="img-wrapper">
@@ -167,7 +167,14 @@ export default {
             vertical-align top
             box-sizing border-box
             .img-wrapper
+              position relative
+              width 100%
+              height 0
+              padding-top 100%
               img
+                position absolute
+                top 0
+                left 0
                 display block
                 width 96%
                 height 100%

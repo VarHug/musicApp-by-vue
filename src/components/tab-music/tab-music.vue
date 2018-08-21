@@ -45,7 +45,12 @@
           this.pos[i] = i * tabItemWidth + diff;
         }
         // 设置位置
-        border.style.left = document.getElementsByClassName('router-link-active')[0].offsetLeft + diff + 'px';
+        let linkActive = document.getElementsByClassName('router-link-active')[0];
+        if (linkActive && linkActive.offsetLeft) {
+          border.style.left = linkActive.offsetLeft + diff + 'px';
+        } else {
+          border.style.left = `${this.pos[0]}px`;
+        }
       }
     }
   };

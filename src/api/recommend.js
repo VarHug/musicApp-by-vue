@@ -20,12 +20,14 @@ export function getDissList(opts) {
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
     hostUin: 0,
-    sortId: 5,
+    sortId: 5, // 5:推荐,2:最新
     needNewCode: 0,
     categoryId: 10000000, // 歌单类型
     picmid: 1,
     rnd: Math.random(),
-    format: 'json'
+    format: 'json',
+    sin: 0, // 起始index
+    ein: 29 // 结束index
   }, opts);
 
   return axios.get(url, {
