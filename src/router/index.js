@@ -25,7 +25,11 @@ export default new Router({
     }]
   }, {
     path: '/diss',
-    component: Diss
+    component: Diss,
+    children: [{
+      path: ':id',
+      component: DissDeatil
+    }]
   }, {
     path: '/singer',
     component: Singer,

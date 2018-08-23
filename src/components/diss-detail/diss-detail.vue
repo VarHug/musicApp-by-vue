@@ -34,7 +34,7 @@ export default {
   methods: {
     _getDissSongList() {
       if (!this.diss.dissid) {
-        this.$router.push('/recommend');
+        this.$router.back();
         return;
       }
       getDissSongList(this.diss.dissid).then(res => {

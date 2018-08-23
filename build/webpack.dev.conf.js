@@ -56,6 +56,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     before(app) {
       app.use(bodyParser.urlencoded({extended: true}))
 
+      // 歌单tag数据
+      app.get('/api/getDissTag', function (req, res) {
+        const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_tag_conf.fcg';
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data);
+        }).catch(e => {
+          console.log(e);
+        })
+      })
+
       // 歌单数据
       app.get('/api/getDissList', function (req, res) {
         const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';

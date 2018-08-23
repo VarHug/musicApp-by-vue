@@ -160,9 +160,11 @@ export default {
             font-size $font-size-small-s
             color $color-text-white-shallow
         .list
+          margin-right -3.3%
           .item
             display inline-block
-            width 33.3%
+            width 30%
+            margin-right 3.3%
             font-size 0
             vertical-align top
             box-sizing border-box
@@ -176,7 +178,7 @@ export default {
                 top 0
                 left 0
                 display block
-                width 96%
+                width 100%
                 height 100%
                 margin 0 auto
                 border-radius 5px

@@ -1,6 +1,25 @@
 import {commonParams} from '../api/config';
 import axios from 'axios';
 
+export function getDissTag() {
+  const url = '/api/getDissTag';
+
+  const data = Object.assign({}, commonParams, {
+    g_tk: 377597455,
+    platform: 'yqq',
+    hostUin: 0,
+    notice: 0,
+    needNewCode: 0,
+    format: 'json'
+  });
+
+  return axios.get(url, {
+    params: data
+  }).then(res => {
+    return Promise.resolve(res.data);
+  });
+}
+
 export function getDissList(opts) {
   const url = '/api/getDissList';
 
