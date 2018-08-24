@@ -1,6 +1,8 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import {playMode} from '@/common/js/config.js';
+import {playMode, DEFAULT_CATEGORY_ID} from '@/common/js/config.js';
 import {shuffle} from '@/common/js/util.js';
+import {getDissList} from '@/api/diss.js';
+import {ERR_OK} from '@/api/config.js';
 
 export const playlistMixin = {
   computed: {
@@ -127,5 +129,53 @@ export const searchMixin = {
       'saveSearchHistory',
       'deleteSearchHistory'
     ])
+  }
+};
+
+export const dissMixin = {
+  data() {
+    return {
+      sin: 0,
+      ein: 29,
+      categoryId: DEFAULT_CATEGORY_ID,
+      pullup: true,
+      hasMore: true
+    };
+  },
+  methods: {
+    loadDissList() {
+      if (this.hasMore) {
+        this.sin += 30;
+        this.ein += 30;
+        this._getDissList();
+      }
+    },
+    selectDiss(diss) {
+      this.$router.push({
+        path: `/diss/${diss.dissid}`
+      });
+      this.setDiss(diss);
+    },
+    _getDissList() {
+      getDissList({
+        sin: this.sin,
+        ein: this.ein,
+        categoryId: this.categoryId,
+        sortId: this.sortId
+      }).then(res => {
+        if (res.code === ERR_OK) {
+          this.dissList = this.dissList.concat(res.data.list);
+          this._checkMore(res.data);
+        }
+      });
+    },
+    _checkMore(data) {
+      if (this.ein > data.sum) {
+        this.hasMore = false;
+      }
+    },
+    ...mapMutations({
+      setDiss: 'SET_DISS'
+    })
   }
 };

@@ -7,6 +7,7 @@
     <h1 class="title">全部分类</h1>
     <scroll class="select-list" ref="selectList">
       <div>
+        <div class="all" @click="selectAll">全部歌单</div>
         <li class="category-group" v-for="(categoryGroup, index) in diss" :key="index">
           <div class="diss-tag-name">
             <div class="diss-desc">
@@ -15,7 +16,7 @@
             </div>
           </div>
           <ul class="diss-tag" ref="dissTag">
-            <li class="category" v-for="(category, index) in categoryGroup.items" :key="index" v-html="category.categoryName"></li>
+            <li class="category" v-for="(category, index) in categoryGroup.items" :key="index" v-html="category.categoryName" @click="selectCategory(category)"></li>
           </ul>
         </li>
       </div>
@@ -73,6 +74,14 @@ export default {
         return 'icon-type-scene';
       }
     },
+    selectAll() {
+      this.hide();
+      this.$emit('selectAll');
+    },
+    selectCategory(category) {
+      this.hide();
+      this.$emit('selectCategory', category);
+    },
     _getDissTag() {
       getDissTag().then(res => {
         if (res.code === ERR_OK) {
@@ -105,6 +114,7 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
+  @import "~common/stylus/mixin"
 
   .diss-select
     position fixed
@@ -136,6 +146,13 @@ export default {
       top 40px
       bottom 0
       overflow hidden
+      .all
+        line-height 40px
+        height 40px
+        text-align center
+        font-size $font-size-medium-x
+        color $color-text
+        border-top 5px solid #ddd
       .category-group
         display flex
         border-top 5px solid #ddd

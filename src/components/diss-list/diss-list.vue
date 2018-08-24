@@ -1,5 +1,5 @@
 <template>
-  <ul class="diss-list">
+  <ul class="diss-list" v-if="dissList">
     <li v-for="(item, index) in dissList" :key="index" class="diss-list-item" @click="selectDiss(item)">
       <div class="img-wrapper">
         <img v-lazy="item.imgurl">

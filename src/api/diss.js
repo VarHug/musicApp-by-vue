@@ -24,6 +24,7 @@ export function getDissList(opts) {
   const url = '/api/getDissList';
 
   const data = Object.assign({}, commonParams, {
+    g_tk: 377597455,
     platform: 'yqq',
     hostUin: 0,
     sortId: 5, // 5:推荐,2:最新

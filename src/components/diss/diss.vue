@@ -5,20 +5,39 @@
         <i class="icon-arrow-left"></i>
       </div>
       <h1 class="title">歌单</h1>
-      <scroll class="diss-content" :data="dissList" ref="dissContent">
+      <scroll class="diss-wrapper" :data="dissList" ref="dissWrapper" :pullup="pullup" @scrollToEnd="loadDissList">
         <div>
-          <h2 class="sub-title">推荐分类</h2>
-          <div class="mroe" @click="showSelect">
-            <i class="icon-arrow-right"></i>
+          <div class="hot-diss" @click="showHotDiss">
+            <div class="bg-image">
+              <img :src="hotDiss && hotDiss.imgurl">
+            </div>
+            <div class="filter"></div>
+            <div class="hot-diss-content">
+              <div class="hot-diss-avatar">
+                <img width="100%" height="100%" :src="hotDiss && hotDiss.imgurl" >
+              </div>
+              <div class="hot-diss-desc">
+                <div class="hot-diss-title">
+                  <i class="iblock icon-exclusive"></i>
+                  <span class="iblock">热门歌单<i class="icon-arrow-right"></i></span>
+                </div>
+                <div class="diss-name">{{hotDiss.dissname}}</div>
+                <div class="diss-introduction">{{hotDiss.introduction}}</div>
+              </div>
+            </div>
           </div>
-          <ul class="disslist-tag">
-            <li class="disslist-tag-item" v-for="(item, index) in recommendDiss" :key="index">{{item.name}}</li>
-          </ul>
-          <h2 class="sub-title">编辑推荐</h2>
-          <diss-list :dissList="dissList" @select="selectDiss" class="diss-list"></diss-list>
+          <div class="diss-content">
+            <h2 class="sub-title" @click="showSelect" v-html="categoryName"></h2>
+            <i class="icon-arrow-right"></i>
+            <diss-list :dissList="dissList" @select="selectDiss" class="diss-list"></diss-list>
+            <loading v-show="dissList.length && hasMore"></loading>
+            <div class="no-result" v-show="!hasMore">-没有更多歌单啦-</div>
+          </div>
         </div>
+        <loading v-show="!dissList.length"></loading>
       </scroll>
-      <diss-select ref="dissSelect"></diss-select>
+      <diss-select ref="dissSelect" @selectAll="selectAll" @selectCategory="selectCategory"></diss-select>
+      <diss-hot ref="dissHot"></diss-hot>
       <router-view></router-view>
     </div>
   </transition>
@@ -26,62 +45,86 @@
 
 <script type="text/ecmascript-6">
 import Scroll from '@/base/scroll/scroll';
-import {recommendDiss} from '@/common/js/diss.js';
+import Loading from '@/base/loading/loading';
 import {getDissList} from '@/api/diss.js';
 import {ERR_OK} from '@/api/config.js';
-import {mapMutations} from 'vuex';
-import {playlistMixin} from '../../common/js/mixin.js';
+import {dissMixin, playlistMixin} from '../../common/js/mixin.js';
 import DissList from '@/components/diss-list/diss-list';
 import DissSelect from '@/components/diss-select/diss-select';
+import DissHot from '@/components/diss-hot/diss-hot';
+import {DEFAULT_CATEGORY_ID, SORT_ID} from '@/common/js/config.js';
+
+const DEFAULT_CATEGORY_NAME = '全部歌单';
 
 export default {
   mixins: [
+    dissMixin,
     playlistMixin
   ],
   data() {
     return {
-      recommendDiss: recommendDiss,
-      dissList: []
+      categoryName: DEFAULT_CATEGORY_NAME,
+      sortId: SORT_ID.new,
+      dissList: [],
+      hotDiss: ''
     };
   },
   created() {
+    this._getHotDiss();
     this._getDissList();
   },
   methods: {
     handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? '60px' : '';
-      this.$refs.dissContent.$el.style.bottom = bottom;
-      this.$refs.dissContent.refresh();
+      this.$refs.dissWrapper.$el.style.bottom = bottom;
+      this.$refs.dissWrapper.refresh();
     },
     back() {
       this.$router.back();
     },
+    showHotDiss() {
+      this.$refs.dissHot.show();
+    },
     showSelect() {
       this.$refs.dissSelect.show();
     },
-    selectDiss(diss) {
-      this.$router.push({
-        path: `/diss/${diss.dissid}`
-      });
-      this.setDiss(diss);
+    selectAll() {
+      this._initDissList();
+      this.categoryName = DEFAULT_CATEGORY_NAME;
+      this.categoryId = DEFAULT_CATEGORY_ID;
+      this._getDissList();
     },
-    _getDissList() {
+    selectCategory(category) {
+      this._initDissList();
+      this.categoryName = category.categoryName;
+      this.categoryId = category.categoryId;
+      this._getDissList();
+    },
+    _initDissList() {
+      this.dissList = [];
+      this.sin = 0;
+      this.ein = 29;
+      this.categoryId = DEFAULT_CATEGORY_ID;
+      this.categoryName = DEFAULT_CATEGORY_NAME;
+    },
+    _getHotDiss() {
       getDissList({
-        sortId: 2
+        sin: 0,
+        ein: 1,
+        sortId: 5
       }).then(res => {
         if (res.code === ERR_OK) {
-          this.dissList = res.data.list;
+          this.hotDiss = res.data.list[0];
         }
       });
-    },
-    ...mapMutations({
-      setDiss: 'SET_DISS'
-    })
+    }
   },
   components: {
     Scroll,
     DissList,
-    DissSelect
+    DissSelect,
+    Loading,
+    DissHot
   }
 };
 </script>
@@ -115,43 +158,89 @@ export default {
       font-size $font-size-large
       color $color-text-white
       background $color-background-red
-    .diss-content
+    .diss-wrapper
       position fixed
-      top 50px
+      top 40px
+      right 0
       bottom 0
-      padding 0 10px
+      left 0
       overflow hidden
-      .sub-title
-        font-size $font-size-medium-x
-        color $color-text
-      .mroe
-        position absolute
-        top 0
-        right 0
-        line-height 16px
-        width 16px
-        height 16px
-        text-align center
-        border 1px solid $color-text
-        border-radius 50%
-        .icon-arrow-right
-          font-size $font-size-small-s
-      .disslist-tag
+      .hot-diss
+        position relative
+        width 100%
+        height 125px
         overflow hidden
-        margin 15px -3.3% 15px 0
-        .disslist-tag-item
-          float left
-          margin 0 3.3% 5px 0
-          line-height 20px
-          width 30%
-          height 20px
+        .bg-image
+          position absolute
+          top 0
+          left 0
+          width 100%
+          height 100%
+          overflow hidden
+        .filter
+          position absolute
+          top 0
+          left 0
+          width 100%
+          height 100%
+          background rgba(7,17,27,0.2)
+        .hot-diss-content
+          position relative
+          display flex
+          padding 10px
+          .hot-diss-avatar
+            flex 0 0 100px
+            width 100px
+            height 100px
+          .hot-diss-desc
+            flex 1
+            margin-left 10px
+            color $color-text-white
+            .hot-diss-title
+              margin-bottom 10px
+              height 30px
+              line-height 30px
+              font-size $font-size-medium-x
+              .iblock
+                display inline-block
+                vertical-align middle
+              .icon-program
+                font-size $font-size-large-x
+              .icon-arrow-right
+                margin-left 5px
+                font-size $font-size-medium
+                color $color-text-l
+            .diss-name
+              font-size $font-size-medium
+            .diss-introduction
+              font-size $font-size-small
+              color $color-text-l
+      .diss-content
+        position relative
+        padding 10px 10px 0
+        .sub-title
+          width 90px
+          height 25px
+          line-height 25px
           text-align center
           font-size $font-size-medium
-          color $color-text-ll
-          background $color-sub-theme
-          border-radius 5px
-      .diss-list
-        margin-top 10px
+          color $color-text
+          border 1px solid $color-border
+          border-radius 15px
+        .icon-arrow-right
+          position absolute
+          top 18px
+          left 85px
+          font-size $font-size-small-s
+        .diss-list
+          margin-top 10px
+        .no-result
+          width 100%
+          height 40px
+          line-height 40px
+          text-align center
+          font-size $font-size-small-s
+          color $color-text-grey
 
   .slide-enter-active, .slide-leave-active
     transition all .3s
