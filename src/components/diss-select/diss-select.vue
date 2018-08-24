@@ -42,14 +42,10 @@ export default {
   created() {
     this._getDissTag();
   },
-  mounted() {
-    this.$nextTick(() => {
-      this._setBorderCss();
-    });
-  },
   methods: {
     show() {
       this.showFlag = true;
+      this._setBorderCss();
       setTimeout(() => {
         this.$refs.selectList.refresh();
       }, 20);
