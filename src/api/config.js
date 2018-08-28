@@ -15,3 +15,15 @@ export function setOptions(opts) {
 }
 
 export const ERR_OK = 0;
+
+/**
+* 获取16位随机数
+* @returns {string}
+*/
+export function getRadnom16() {
+ let num = '';
+ for (let i = 0; i < 16; i++) {
+   num += Math.random() * 10 | 0;
+ }
+ return num;
+}

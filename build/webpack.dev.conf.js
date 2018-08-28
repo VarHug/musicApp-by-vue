@@ -88,6 +88,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       })
 
+      // 电台歌曲列表
+      app.get('/api/getRadioSongList', function (req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/portal/player_radio.html',
+            host: 'u.y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data);
+        }).catch(e => {
+          console.log(e);
+        })
+      })
+
       // 歌曲URL
       app.post('/api/getPurlUrl', bodyParser.json(), function (req, res) {
         const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'

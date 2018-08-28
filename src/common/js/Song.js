@@ -83,3 +83,22 @@ function filterSinger(singer) {
   });
   return singerName.join('/');
 }
+
+/**
+ * 从列表中抽取出所需要格式的MusicData
+ * @param {Object} listItem
+ */
+export function getMusicData(listItem) {
+  let musicData = {};
+
+  musicData.songid = listItem.id;
+  musicData.songmid = listItem.mid;
+  musicData.singer = listItem.singer;
+  musicData.songname = listItem.name;
+  musicData.albumname = listItem.album.name;
+  musicData.interval = listItem.interval;
+  musicData.albummid = listItem.album.mid;
+  musicData.url = '';
+
+  return musicData;
+}

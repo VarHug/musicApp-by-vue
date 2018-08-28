@@ -1,17 +1,5 @@
 import jsonp from '../common/js/jsonp';
-import {commonParams, setOptions} from '../api/config';
-
-/**
- * 获取16位随机数
- * @returns {string}
- */
-function getRadnom16() {
-  let num = '';
-  for (let i = 0; i < 16; i++) {
-    num += Math.random() * 10 | 0;
-  }
-  return num;
-}
+import {commonParams, setOptions, getRadnom16} from '../api/config';
 
 export function getSingerList() {
   const url = 'https://c.y.qq.com/v8/fcg-bin/v8.fcg';
