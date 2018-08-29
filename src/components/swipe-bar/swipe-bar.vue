@@ -42,10 +42,12 @@ export default {
   },
   methods: {
     show() {
+      this.$refs.swipeContent.style = '';
       this.showFlag = true;
     },
     hide() {
       this.showFlag = false;
+      this._swipeHide();
     },
     toUser() {
       this.hide();
@@ -76,7 +78,6 @@ export default {
       if (this.touch.percent) {
         if (this.touch.percent >= 0.5) {
           this.hide();
-          this.$refs.swipeContent.style = '';
         } else {
           this._swipeShow();
           // 解决异步动画未能执行完成
@@ -90,6 +91,10 @@ export default {
     _swipeShow() {
       this.$refs.swipeContent.style[transitionDuration] = `${time}ms`;
       this.$refs.swipeContent.style[transform] = `translate3d(0, 0, 0)`;
+    },
+    _swipeHide() {
+      this.$refs.swipeContent.style[transitionDuration] = `${time}ms`;
+      this.$refs.swipeContent.style[transform] = `translate3d(-100%, 0, 0)`;
     }
   },
   components: {
@@ -117,9 +122,9 @@ export default {
       width 80%
       height 100%
       background $color-background
-      &.slide-enter-active, &.slide-leave-active
+      &.slide-enter-active
         transition all .5s
-      &.slide-enter, &.slide-leave-to
+      &.slide-enter
         transform translate3d(-100%, 0, 0)
       .swipe-header
         position relative
