@@ -28,6 +28,7 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
+  @import "~common/stylus/mixin"
 
   .diss-list
     display flex
@@ -40,6 +41,7 @@ export default {
       width 45%
       margin-right 5%
       padding-bottom 30px
+      overflow hidden
       .img-wrapper
         position relative
         width 100%
@@ -60,8 +62,10 @@ export default {
       .creator-name
         position absolute
         bottom 8px
+        width 100%
         line-height 18px
         font-size $font-size-small-s
         color $color-text-grey
+        no-wrap()
 
 </style>
