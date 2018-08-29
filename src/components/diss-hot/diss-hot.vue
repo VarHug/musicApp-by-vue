@@ -1,10 +1,7 @@
 <template>
   <transition name="slide">
   <div class="diss-hot" v-show="showFlag">
-    <div class="back" @click="hide">
-      <i class="icon-arrow-left"></i>
-    </div>
-    <h1 class="title">热门歌单·全部</h1>
+    <route-header title="热门歌单·全部" @back="hide"></route-header>
     <scroll :data="dissList" class="hot-list" v-if="dissList" :pullup="pullup" @scrollToEnd="loadDissList" ref="hotList">
       <ul>
         <li v-for="(diss, index) in dissList" :key="index" class="diss-item" @click="selectDiss(diss)">
@@ -32,6 +29,7 @@
 import {dissMixin, playlistMixin} from '@/common/js/mixin.js';
 import Loading from '@/base/loading/loading';
 import Scroll from '@/base/scroll/scroll';
+import RouteHeader from '@/base/route-header/route-header';
 import {SORT_ID} from '@/common/js/config.js';
 
 export default {
@@ -62,7 +60,8 @@ export default {
   },
   components: {
     Scroll,
-    Loading
+    Loading,
+    RouteHeader
   }
 };
 </script>
@@ -78,24 +77,6 @@ export default {
     width 100%
     z-index 100
     background $color-background
-    .back
-      position absolute
-      top 0
-      left 6px
-      z-index 50
-      .icon-arrow-left
-        display block
-        padding 10px
-        font-size $font-size-large
-        color $color-text-white
-    .title
-      z-index 40
-      no-wrap()
-      line-height 40px
-      text-align center
-      font-size $font-size-large
-      color $color-text-white
-      background $color-background-red
     .hot-list
       position absolute
       top 40px

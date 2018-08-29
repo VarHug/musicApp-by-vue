@@ -1,10 +1,7 @@
 <template>
   <transition name="slide">
     <div class="diss" ref="diss">
-      <div class="back" @click="back">
-        <i class="icon-arrow-left"></i>
-      </div>
-      <h1 class="title">歌单</h1>
+      <route-header title="歌单" @back="back"></route-header>
       <scroll class="diss-wrapper" :data="dissList" ref="dissWrapper" :pullup="pullup" @scrollToEnd="loadDissList">
         <div>
           <div class="hot-diss" @click="showHotDiss">
@@ -46,6 +43,7 @@
 <script type="text/ecmascript-6">
 import Scroll from '@/base/scroll/scroll';
 import Loading from '@/base/loading/loading';
+import RouteHeader from '@/base/route-header/route-header';
 import {getDissList} from '@/api/diss.js';
 import {ERR_OK} from '@/api/config.js';
 import {dissMixin, playlistMixin} from '../../common/js/mixin.js';
@@ -124,7 +122,8 @@ export default {
     DissList,
     DissSelect,
     Loading,
-    DissHot
+    DissHot,
+    RouteHeader
   }
 };
 </script>
@@ -140,24 +139,6 @@ export default {
     width 100%
     z-index 100
     background $color-background
-    .back
-      position absolute
-      top 0
-      left 6px
-      z-index 50
-      .icon-arrow-left
-        display block
-        padding 10px
-        font-size $font-size-large
-        color $color-text-white
-    .title
-      padding-left 45px
-      z-index 40
-      no-wrap()
-      line-height 40px
-      font-size $font-size-large
-      color $color-text-white
-      background $color-background-red
     .diss-wrapper
       position fixed
       top 40px
