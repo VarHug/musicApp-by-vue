@@ -28,9 +28,10 @@
               <p class="desc" v-html="item.dissname"></p>
             </li>
           </ul>
-          <h1 class="list-title">热门电台推荐
+          <router-link tag="h1" class="list-title" to="/radio">
+            热门电台推荐
             <i class="icon icon-arrow-right"></i>
-          </h1>
+          </router-link>
           <ul v-if="radioListCopy.length" class="list">
             <li v-for="(item, index) in radioListCopy" :key="index" class="item" ref="item" @click="selectRadio(item)">
               <div class="img-wrapper">
@@ -53,15 +54,15 @@ import Scroll from '@/base/scroll/scroll';
 import Slider from '@/base/slider/slider';
 import Loading from '@/base/loading/loading';
 import {getRecommend, getDissList} from '@/api/recommend.js';
-import {getRadioList, getRadioSongList} from '@/api/radio.js';
+import {getRadioList} from '@/api/radio.js';
 import {ERR_OK} from '@/api/config.js';
-import {playlistMixin} from '../../common/js/mixin.js';
+import {playlistMixin, radioMixin} from '../../common/js/mixin.js';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import {getMusicData, createSong, isValidMusic, processSongsUrl} from '@/common/js/Song.js';
 
 export default {
   mixins: [
-    playlistMixin
+    playlistMixin,
+    radioMixin
   ],
   data() {
     return {
@@ -97,18 +98,6 @@ export default {
       });
       this.setDiss(diss);
     },
-    selectRadio(radio) {
-      getRadioSongList(radio.radioId).then(res => {
-        let normalList = this._normallizeSongsList(res.songlist.data.track_list);
-        processSongsUrl(normalList).then(songs => {
-          this.songsList = songs;
-          this.selectPlay({
-            list: songs,
-            index: 0
-          });
-        });
-      });
-    },
     _getRecommend() {
       getRecommend().then(res => {
         if (res.code === ERR_OK) {
@@ -130,23 +119,15 @@ export default {
       if (!this.radioList || !this.radioList.length) {
         getRadioList().then(res => {
           if (res.code === ERR_OK) {
-            this.setRadioList(res.data.data.groupList);
-            this.radioListCopy = this.radioList[0].radioList.slice(1, 7);
+            let radioList = res.data.data.groupList;
+            radioList[0].radioList.shift(); // 去除'个性电台'这个list
+            this.setRadioList(radioList);
+            this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
           }
         });
       } else {
-        this.radioListCopy = this.radioList[0].radioList.slice(1, 7);
+        this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
       }
-    },
-    _normallizeSongsList(list) {
-      let ret = [];
-      list.forEach(item => {
-        let musicData = getMusicData(item);
-        if (isValidMusic(musicData)) {
-          ret.push(createSong(musicData));
-        }
-      });
-      return ret;
     },
     ...mapMutations({
       setDiss: 'SET_DISS',

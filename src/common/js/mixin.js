@@ -3,6 +3,8 @@ import {playMode, DEFAULT_CATEGORY_ID} from '@/common/js/config.js';
 import {shuffle} from '@/common/js/util.js';
 import {getDissList} from '@/api/diss.js';
 import {ERR_OK} from '@/api/config.js';
+import {getMusicData, createSong, isValidMusic, processSongsUrl} from '@/common/js/Song.js';
+import {getRadioSongList} from '@/api/radio.js';
 
 export const playlistMixin = {
   computed: {
@@ -177,5 +179,35 @@ export const dissMixin = {
     ...mapMutations({
       setDiss: 'SET_DISS'
     })
+  }
+};
+
+export const radioMixin = {
+  methods: {
+    selectRadio(radio) {
+      getRadioSongList(radio.radioId).then(res => {
+        let normalList = this._normallizeSongsList(res.songlist.data.track_list);
+        processSongsUrl(normalList).then(songs => {
+          this.songsList = songs;
+          this.selectPlay({
+            list: songs,
+            index: 0
+          });
+        });
+      });
+    },
+    _normallizeSongsList(list) {
+      let ret = [];
+      list.forEach(item => {
+        let musicData = getMusicData(item);
+        if (isValidMusic(musicData)) {
+          ret.push(createSong(musicData));
+        }
+      });
+      return ret;
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   }
 };

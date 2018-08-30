@@ -9,6 +9,7 @@ import TopList from 'components/top-list/top-list.vue';
 import Search from 'components/search/search';
 import UserCenter from 'components/user-center/user-center.vue';
 import Diss from 'components/diss/diss.vue';
+import Radio from 'components/radio/radio.vue';
 
 Vue.use(Router);
 
@@ -30,6 +31,9 @@ export default new Router({
       path: ':id',
       component: DissDeatil
     }]
+  }, {
+    path: '/radio',
+    component: Radio
   }, {
     path: '/singer',
     component: Singer,

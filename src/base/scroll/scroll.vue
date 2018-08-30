@@ -18,6 +18,10 @@ export default {
       type: Boolean,
       default: true
     },
+    scrollX: {
+      type: Boolean,
+      default: false
+    },
     // 列表的数据
     data: {
       type: Array,
@@ -62,7 +66,8 @@ export default {
       }
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
-        click: this.click
+        click: this.click,
+        scrollX: this.scrollX
       });
 
       if (this.listenScroll) {
