@@ -10,6 +10,7 @@ import Search from 'components/search/search';
 import UserCenter from 'components/user-center/user-center.vue';
 import Diss from 'components/diss/diss.vue';
 import Radio from 'components/radio/radio.vue';
+import AlbumDetail from 'components/album-detail/album-detail.vue';
 
 Vue.use(Router);
 
@@ -22,7 +23,12 @@ export default new Router({
     component: Recommend,
     children: [{
       path: ':id',
+      name: 'dissDetail',
       component: DissDeatil
+    }, {
+      path: ':id',
+      name: 'albumDetail',
+      component: AlbumDetail
     }]
   }, {
     path: '/diss',

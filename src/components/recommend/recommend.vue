@@ -40,6 +40,19 @@
               <p class="desc" v-html="item.radioName"></p>
             </li>
           </ul>
+          <h1 class="list-title">
+            最新专辑推荐
+            <i class="icon icon-arrow-right"></i>
+          </h1>
+          <ul v-if="albumList.length" class="list">
+            <li v-for="(item, index) in albumList" :key="index" class="item" ref="item" @click="selectAlbum(item)">
+              <div class="img-wrapper">
+                <img v-lazy="getAlbumImg(item.album_mid)">
+              </div>
+              <p class="desc" v-html="item.album_name"></p>
+              <p class="singer-name" v-html="getAlbumSinger(item.singers)"></p>
+            </li>
+          </ul>
         </div>
       </div>
       <loading v-show="!dissList.length"></loading>
@@ -55,6 +68,7 @@ import Slider from '@/base/slider/slider';
 import Loading from '@/base/loading/loading';
 import {getRecommend, getDissList} from '@/api/recommend.js';
 import {getRadioList} from '@/api/radio.js';
+import {getAlbumList} from '@/api/album.js';
 import {ERR_OK} from '@/api/config.js';
 import {playlistMixin, radioMixin} from '../../common/js/mixin.js';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
@@ -73,7 +87,9 @@ export default {
       ein: 5,
       // 电台列表
       radioListCopy: [],
-      songsList: []
+      songsList: [],
+      // 专辑列表
+      albumList: []
     };
   },
   computed: {
@@ -85,6 +101,7 @@ export default {
     this._getRecommend();
     this._getDissList();
     this._getRadioList();
+    this._getAlbumList();
   },
   methods: {
     handlePlaylist(playlist) {
@@ -94,9 +111,35 @@ export default {
     },
     selectDiss(diss) {
       this.$router.push({
-        path: `/recommend/${diss.dissid}`
+        // path: `/recommend/${diss.dissid}`
+        name: 'dissDetail',
+        params: {
+          id: diss.dissid
+        }
       });
       this.setDiss(diss);
+    },
+    selectAlbum(album) {
+      this.$router.push({
+        name: 'albumDetail',
+        params: {
+          id: album.album_mid
+        }
+      });
+      this.setAlbum(album);
+    },
+    getAlbumImg(albumMid) {
+      return `http://y.gtimg.cn/music/photo_new/T002R300x300M000${albumMid}.jpg?max_age=2592000`;
+    },
+    getAlbumSinger(singers) {
+        if (!singers) {
+          return '';
+        }
+        let singerName = [];
+        singers.forEach(item => {
+          singerName.push(item.singer_name);
+        });
+        return singerName.join('/');
     },
     _getRecommend() {
       getRecommend().then(res => {
@@ -129,9 +172,17 @@ export default {
         this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
       }
     },
+    _getAlbumList() {
+      getAlbumList().then(res => {
+        if (res.code === ERR_OK) {
+          this.albumList = res.albumlib.data.list.slice(0, 6);
+        }
+      });
+    },
     ...mapMutations({
       setDiss: 'SET_DISS',
-      setRadioList: 'SET_RADIO_LIST'
+      setRadioList: 'SET_RADIO_LIST',
+      setAlbum: 'SET_ALBUM'
     }),
     ...mapActions([
       'selectPlay'
@@ -216,7 +267,7 @@ export default {
                 height 100%
                 margin 0 auto
                 border-radius 5px
-            .desc
+            .desc, .singer-name
               margin-top 5px
               line-height 18px
               font-size $font-size-small-s

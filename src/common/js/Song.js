@@ -85,10 +85,10 @@ function filterSinger(singer) {
 }
 
 /**
- * 从列表中抽取出所需要格式的MusicData
+ * 从电台列表中抽取出所需要格式的MusicData
  * @param {Object} listItem
  */
-export function getMusicData(listItem) {
+export function getRadioMusicData(listItem) {
   let musicData = {};
 
   musicData.songid = listItem.id;

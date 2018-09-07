@@ -39,6 +39,9 @@ const mutations = {
   },
   [types.SET_RADIO_LIST](state, list) {
     state.radioList = list;
+  },
+  [types.SET_ALBUM](state, album) {
+    state.album = album;
   }
 };
 

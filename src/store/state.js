@@ -14,7 +14,8 @@ const state = {
   searchHistory: loadSearch(), // 搜索历史
   playHistory: loadPlay(), // 播放历史
   favoriteList: loadFavorite(),
-  radioList: [] // 电台列表
+  radioList: [], // 电台列表,
+  album: {} // 歌单信息
 };
 
 export default state;

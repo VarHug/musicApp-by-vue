@@ -3,7 +3,7 @@ import {playMode, DEFAULT_CATEGORY_ID} from '@/common/js/config.js';
 import {shuffle} from '@/common/js/util.js';
 import {getDissList} from '@/api/diss.js';
 import {ERR_OK} from '@/api/config.js';
-import {getMusicData, createSong, isValidMusic, processSongsUrl} from '@/common/js/Song.js';
+import {getRadioMusicData, createSong, isValidMusic, processSongsUrl} from '@/common/js/Song.js';
 import {getRadioSongList} from '@/api/radio.js';
 
 export const playlistMixin = {
@@ -154,7 +154,10 @@ export const dissMixin = {
     },
     selectDiss(diss) {
       this.$router.push({
-        path: `/diss/${diss.dissid}`
+        name: 'dissDetail',
+        params: {
+          id: diss.dissid
+        }
       });
       this.setDiss(diss);
     },
@@ -199,7 +202,7 @@ export const radioMixin = {
     _normallizeSongsList(list) {
       let ret = [];
       list.forEach(item => {
-        let musicData = getMusicData(item);
+        let musicData = getRadioMusicData(item);
         if (isValidMusic(musicData)) {
           ret.push(createSong(musicData));
         }
