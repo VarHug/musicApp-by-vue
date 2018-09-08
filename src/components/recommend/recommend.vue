@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="recommend-list" ref="recommendList">
-          <router-link tag="h1" class="list-title" to="/diss">
+          <router-link v-if="dissList.length" tag="h1" class="list-title" to="/diss">
             热门歌单推荐
             <i class="icon icon-arrow-right"></i>
           </router-link>
@@ -28,7 +28,7 @@
               <p class="desc" v-html="item.dissname"></p>
             </li>
           </ul>
-          <router-link tag="h1" class="list-title" to="/radio">
+          <router-link v-if="radioListCopy.length" tag="h1" class="list-title" to="/radio">
             热门电台推荐
             <i class="icon icon-arrow-right"></i>
           </router-link>
@@ -40,7 +40,7 @@
               <p class="desc" v-html="item.radioName"></p>
             </li>
           </ul>
-          <h1 class="list-title">
+          <h1 v-if="albumList.length" class="list-title">
             最新专辑推荐
             <i class="icon icon-arrow-right"></i>
           </h1>
@@ -49,7 +49,7 @@
               <div class="img-wrapper">
                 <img v-lazy="getAlbumImg(item.album_mid)">
               </div>
-              <p class="desc" v-html="item.album_name"></p>
+              <p class="desc album_name" v-html="item.album_name"></p>
               <p class="singer-name" v-html="getAlbumSinger(item.singers)"></p>
             </li>
           </ul>
@@ -72,6 +72,7 @@ import {getAlbumList} from '@/api/album.js';
 import {ERR_OK} from '@/api/config.js';
 import {playlistMixin, radioMixin} from '../../common/js/mixin.js';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import queue from '@/common/js/asyncTask.js';
 
 export default {
   mixins: [
@@ -81,6 +82,7 @@ export default {
   data() {
     return {
       recommends: [],
+      scrollData: 0, // 传给scroll的data数据
       // 歌单列表
       dissList: [],
       sin: 0,
@@ -98,10 +100,12 @@ export default {
     ])
   },
   created() {
-    this._getRecommend();
-    this._getDissList();
-    this._getRadioList();
-    this._getAlbumList();
+    queue([
+      this._getRecommend,
+      this._getDissList,
+      this._getRadioList,
+      this._getAlbumList
+    ]);
   },
   methods: {
     handlePlaylist(playlist) {
@@ -142,41 +146,61 @@ export default {
         return singerName.join('/');
     },
     _getRecommend() {
-      getRecommend().then(res => {
-        if (res.code === ERR_OK) {
-          this.recommends = res.data.slider;
-        }
+      return new Promise(resolve => {
+        getRecommend().then(res => {
+          if (res.code === ERR_OK) {
+            this.recommends = res.data.slider;
+            this.scrollData++;
+            resolve();
+          }
+        });
       });
     },
     _getDissList() {
-      getDissList({
-        sin: this.sin,
-        ein: this.ein
-      }).then(res => {
-        if (res.code === ERR_OK) {
-          this.dissList = this.dissList.concat(res.data.list);
-        }
+      return new Promise(resolve => {
+        getDissList({
+          sin: this.sin,
+          ein: this.ein
+        }).then(res => {
+          if (res.code === ERR_OK) {
+            this.dissList = this.dissList.concat(res.data.list);
+            this.scrollData++;
+            resolve();
+          }
+        });
       });
     },
     _getRadioList() {
-      if (!this.radioList || !this.radioList.length) {
-        getRadioList().then(res => {
-          if (res.code === ERR_OK) {
-            let radioList = res.data.data.groupList;
-            radioList[0].radioList.shift(); // 去除'个性电台'这个list
-            this.setRadioList(radioList);
-            this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
-          }
-        });
-      } else {
-        this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
-      }
+      return new Promise(resolve => {
+        if (!this.radioList || !this.radioList.length) {
+          getRadioList().then(res => {
+            if (res.code === ERR_OK) {
+              let radioList = res.data.data.groupList;
+              radioList[0].radioList.shift(); // 去除'个性电台'这个list
+              this.setRadioList(radioList);
+              this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
+              this.scrollData++;
+              resolve();
+            }
+          });
+        } else {
+          this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
+          this.scrollData++;
+          resolve();
+        }
+      });
     },
     _getAlbumList() {
-      getAlbumList().then(res => {
-        if (res.code === ERR_OK) {
-          this.albumList = res.albumlib.data.list.slice(0, 6);
-        }
+      return new Promise(resolve => {
+        let albumData = {};
+        albumData.areaId = -1; // 全部
+        getAlbumList(albumData).then(res => {
+          if (res.code === ERR_OK) {
+            this.albumList = res.albumlib.data.list.slice(0, 6);
+            this.scrollData++;
+            resolve();
+          }
+        });
       });
     },
     ...mapMutations({
@@ -199,6 +223,7 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
+  @import "~common/stylus/mixin"
 
   .recommend
     position fixed
@@ -272,4 +297,6 @@ export default {
               line-height 18px
               font-size $font-size-small-s
               color $color-text
+            .album_name
+              no-wrap()
 </style>
