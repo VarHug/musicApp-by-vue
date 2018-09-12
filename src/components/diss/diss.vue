@@ -26,7 +26,7 @@
           <div class="diss-content">
             <h2 class="sub-title" @click="showSelect" v-html="categoryName"></h2>
             <i class="icon-arrow-right"></i>
-            <diss-list :dissList="dissList" @select="selectDiss" class="diss-list"></diss-list>
+            <second-list :list="dissList" @select="selectDiss" class="diss-list"></second-list>
             <loading v-show="dissList.length && hasMore"></loading>
             <div class="no-result" v-show="!hasMore">-没有更多歌单啦-</div>
           </div>
@@ -44,10 +44,10 @@
 import Scroll from '@/base/scroll/scroll';
 import Loading from '@/base/loading/loading';
 import RouteHeader from '@/base/route-header/route-header';
+import SecondList from '@/base/second-list/second-list';
 import {getDissList} from '@/api/diss.js';
 import {ERR_OK} from '@/api/config.js';
 import {dissMixin, playlistMixin} from '../../common/js/mixin.js';
-import DissList from '@/components/diss-list/diss-list';
 import DissSelect from '@/components/diss-select/diss-select';
 import DissHot from '@/components/diss-hot/diss-hot';
 import {DEFAULT_CATEGORY_ID, SORT_ID} from '@/common/js/config.js';
@@ -119,7 +119,7 @@ export default {
   },
   components: {
     Scroll,
-    DissList,
+    SecondList,
     DissSelect,
     Loading,
     DissHot,

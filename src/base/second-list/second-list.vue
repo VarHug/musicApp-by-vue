@@ -1,6 +1,6 @@
 <template>
-  <ul class="diss-list" v-if="dissList">
-    <li v-for="(item, index) in dissList" :key="index" class="diss-list-item" @click="selectDiss(item)">
+  <ul class="second-list" v-if="list">
+    <li v-for="(item, index) in list" :key="index" class="diss-list-item" @click="selectDiss(item)">
       <div class="img-wrapper">
         <img v-lazy="item.imgurl">
       </div>
@@ -13,7 +13,7 @@
 <script type="text/ecmascript-6">
 export default {
   props: {
-    dissList: {
+    list: {
       type: Array,
       default: () => []
     }
@@ -30,7 +30,7 @@ export default {
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
 
-  .diss-list
+  .second-list
     display flex
     flex-flow row wrap
     align-content flex-start
