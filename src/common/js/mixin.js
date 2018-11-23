@@ -154,24 +154,24 @@ export const dissMixin = {
     },
     selectDiss(diss) {
       this.$router.push({
-        name: 'dissDetail',
-        params: {
-          id: diss.dissid
-        }
+        path: `/diss/${diss.dissid}`
       });
       this.setDiss(diss);
     },
     _getDissList() {
-      getDissList({
-        sin: this.sin,
-        ein: this.ein,
-        categoryId: this.categoryId,
-        sortId: this.sortId
-      }).then(res => {
-        if (res.code === ERR_OK) {
-          this.dissList = this.dissList.concat(res.data.list);
-          this._checkMore(res.data);
-        }
+      return new Promise(resolve => {
+        getDissList({
+          sin: this.sin,
+          ein: this.ein,
+          categoryId: this.categoryId,
+          sortId: this.sortId
+        }).then(res => {
+          if (res.code === ERR_OK) {
+            this.dissList = this.dissList.concat(res.data.list);
+            this._checkMore(res.data);
+            resolve(this.dissList);
+          }
+        });
       });
     },
     _checkMore(data) {

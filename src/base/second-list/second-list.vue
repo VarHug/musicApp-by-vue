@@ -1,11 +1,11 @@
 <template>
   <ul class="second-list" v-if="list">
-    <li v-for="(item, index) in list" :key="index" class="diss-list-item" @click="selectDiss(item)">
+    <li v-for="(item, index) in list" :key="index" class="second-list-item" @click="select(item)">
       <div class="img-wrapper">
         <img v-lazy="item.imgurl">
       </div>
-      <p class="desc" v-html="item.dissname"></p>
-      <p class="creator-name" v-html="item.creator.name"></p>
+      <p class="desc" v-html="item.name"></p>
+      <p class="creator-name" v-html="item.creator"></p>
     </li>
   </ul>
 </template>
@@ -19,8 +19,8 @@ export default {
     }
   },
   methods: {
-    selectDiss(diss) {
-      this.$emit('select', diss);
+    select(item) {
+      this.$emit('select', item);
     }
   }
 };
@@ -35,7 +35,7 @@ export default {
     flex-flow row wrap
     align-content flex-start
     margin-right -5%
-    .diss-list-item
+    .second-list-item
       flex 0 0 45%
       position relative
       width 45%

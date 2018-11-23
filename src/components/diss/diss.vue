@@ -26,7 +26,7 @@
           <div class="diss-content">
             <h2 class="sub-title" @click="showSelect" v-html="categoryName"></h2>
             <i class="icon-arrow-right"></i>
-            <second-list :list="dissList" @select="selectDiss" class="diss-list"></second-list>
+            <second-list :list="secondList" @select="selectDiss" class="diss-list"></second-list>
             <loading v-show="dissList.length && hasMore"></loading>
             <div class="no-result" v-show="!hasMore">-没有更多歌单啦-</div>
           </div>
@@ -64,12 +64,15 @@ export default {
       categoryName: DEFAULT_CATEGORY_NAME,
       sortId: SORT_ID.new,
       dissList: [],
-      hotDiss: ''
+      hotDiss: '',
+      secondList: []
     };
   },
   created() {
     this._getHotDiss();
-    this._getDissList();
+    this._getDissList().then(dissList => {
+      this._formatSecondList(dissList);
+    });
   },
   methods: {
     handlePlaylist(playlist) {
@@ -90,16 +93,30 @@ export default {
       this._initDissList();
       this.categoryName = DEFAULT_CATEGORY_NAME;
       this.categoryId = DEFAULT_CATEGORY_ID;
-      this._getDissList();
+      this._getDissList().then(dissList => {
+        this._formatSecondList(dissList);
+      });
     },
     selectCategory(category) {
       this._initDissList();
       this.categoryName = category.categoryName;
       this.categoryId = category.categoryId;
-      this._getDissList();
+      this._getDissList().then(dissList => {
+        this._formatSecondList(dissList);
+      });
+    },
+    loadDissList() {
+      if (this.hasMore) {
+        this.sin += 30;
+        this.ein += 30;
+        this._getDissList().then(dissList => {
+          this._formatSecondList(dissList);
+        });
+      }
     },
     _initDissList() {
       this.dissList = [];
+      this.secondList = [];
       this.sin = 0;
       this.ein = 29;
       this.categoryId = DEFAULT_CATEGORY_ID;
@@ -114,6 +131,15 @@ export default {
         if (res.code === ERR_OK) {
           this.hotDiss = res.data.list[0];
         }
+      });
+    },
+    _formatSecondList(dissList) {
+      dissList.forEach(element => {
+        let diss = {};
+        diss.imgurl = element.imgurl;
+        diss.name = element.dissname;
+        diss.creator = element.creator.name;
+        this.secondList.push(diss);
       });
     }
   },
