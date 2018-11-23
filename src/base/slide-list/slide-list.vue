@@ -60,7 +60,7 @@ export default {
     let middleHeight = this.$refs.middle.clientHeight;
     this.$refs.list.$el.style.top = `${layerTop + middleHeight + 5}px`;
     this.$refs.layer.style.top = `${layerTop}px`;
-    this.$refs.scrollInner.style.minHeight = `${window.innerHeight - RESERVED_HEIGHT}px`;
+    this.$refs.scrollInner.style.minHeight = `${window.innerHeight - RESERVED_HEIGHT - 60}px`; // minHeight除需要减去RESERVED_HEIGHT外，还应该减去switch部分以及list内置的padding-top，大概取值60px用户体验不错
   },
   methods: {
     scroll(pos) {

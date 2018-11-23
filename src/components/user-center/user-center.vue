@@ -142,6 +142,7 @@ export default {
           border-radius 50%
       .user-name
         line-height 20px
+        text-align center
         height 20px
         font-size $font-size-medium
         color $color-text-white
