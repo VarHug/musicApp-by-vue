@@ -34,12 +34,11 @@ export default {
     display flex
     flex-flow row wrap
     align-content flex-start
-    margin-right -5%
+    justify-content space-between
     .second-list-item
-      flex 0 0 45%
+      flex 0 0 48%
       position relative
-      width 45%
-      margin-right 5%
+      width 48%
       padding-bottom 30px
       overflow hidden
       .img-wrapper

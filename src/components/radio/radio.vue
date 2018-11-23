@@ -12,15 +12,17 @@
       <scroll class="radio-list" :data="radioList" ref="radioList" :listen-scroll="listenScroll" :probe-type="probeType" @scroll="scroll">
         <ul class="radio-list-inner">
           <li v-for="(group, index) in radioList" :key="index" ref="listGroup">
-            <ul>
+            <div>
               <h1 class="title">{{group.name}}</h1>
-              <li v-for="(item, index) in group.radioList" :key="index" class="radio-item" @click="selectRadio(item)">
-                <div class="img-wrapper">
-                  <img width="100%" height="100%" v-lazy="item.radioImg" class="radioImage">
-                </div>
-                <span class="name">{{item.radioName}}</span>
-              </li>
-            </ul>
+              <ul class="category-list">
+                <li v-for="(item, index) in group.radioList" :key="index" class="radio-item" @click="selectRadio(item)">
+                  <div class="img-wrapper">
+                    <img width="100%" height="100%" v-lazy="item.radioImg" class="radioImage">
+                  </div>
+                  <span class="name">{{item.radioName}}</span>
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </scroll>
@@ -199,17 +201,19 @@ export default {
       overflow hidden
       box-sizing border-box
       .radio-list-inner
-        margin-right -3.3%
         .title
           margin-bottom 10px
           line-height 30px
           color #93999f
           background $color-background-grey
-        /.radio-item
-          display inline-block
-          width 30%
-          margin-right 3.3%
-          font-size $font-size-medium
+        .category-list
+          display flex
+          flex-flow row wrap
+          justify-content space-between
+          /.radio-item
+            flex 0 0 30%
+            width 30%
+            font-size $font-size-medium
           .img-wrapper
             position relative
             width 100%

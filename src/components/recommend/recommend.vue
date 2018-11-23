@@ -272,11 +272,12 @@ export default {
             font-size $font-size-small-s
             color $color-text-white-shallow
         .list
-          margin-right -3.3%
+          display flex
+          flex-flow row wrap
+          justify-content space-between
           .item
-            display inline-block
+            flex 0 0 30%
             width 30%
-            margin-right 3.3%
             font-size 0
             vertical-align top
             box-sizing border-box
