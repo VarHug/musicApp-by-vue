@@ -16,7 +16,7 @@ export function getAlbumList(albumData) {
     hostUin: 0,
     platform: 'yqq',
     needNewCode: 0,
-    data: `{"albumlib":{"method":"get_album_by_tags","param":{"area":${albumQuery.areaId},"company":-1,"genre":-1,"type":-1,"year":-1,"sort":2,"get_tags":1,"sin":0,"num":20,"click_albumid":0},"module":"music.web_album_library"}}`
+    data: `{"albumlib":{"method":"get_album_by_tags","param":{"area":${albumQuery.areaId},"company":-1,"genre":-1,"type":-1,"year":-1,"sort":2,"get_tags":1,"sin":${albumQuery.sin},"num":${albumQuery.num},"click_albumid":0},"module":"music.web_album_library"}}`
   });
 
   return axios.get(url, {

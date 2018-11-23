@@ -136,6 +136,7 @@ export default {
     _formatSecondList(dissList) {
       dissList.forEach(element => {
         let diss = {};
+        diss.dissid = element.dissid;
         diss.imgurl = element.imgurl;
         diss.name = element.dissname;
         diss.creator = element.creator.name;

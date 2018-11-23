@@ -10,6 +10,7 @@ import Search from 'components/search/search';
 import UserCenter from 'components/user-center/user-center.vue';
 import Diss from 'components/diss/diss.vue';
 import Radio from 'components/radio/radio.vue';
+import Album from 'components/album/album.vue';
 import AlbumDetail from 'components/album-detail/album-detail.vue';
 
 Vue.use(Router);
@@ -40,6 +41,13 @@ export default new Router({
   }, {
     path: '/radio',
     component: Radio
+  }, {
+    path: '/album',
+    component: Album,
+    children: [{
+      path: ':id',
+      component: AlbumDetail
+    }]
   }, {
     path: '/singer',
     component: Singer,

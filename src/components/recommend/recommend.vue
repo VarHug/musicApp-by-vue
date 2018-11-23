@@ -40,10 +40,10 @@
               <p class="desc" v-html="item.radioName"></p>
             </li>
           </ul>
-          <h1 v-if="albumList.length" class="list-title">
+          <router-link v-if="albumList.length" tag="h1" class="list-title" to="/album">
             最新专辑推荐
             <i class="icon icon-arrow-right"></i>
-          </h1>
+          </router-link>
           <ul v-if="albumList.length" class="list">
             <li v-for="(item, index) in albumList" :key="index" class="item" ref="item" @click="selectAlbum(item)">
               <div class="img-wrapper">
@@ -194,9 +194,11 @@ export default {
       return new Promise(resolve => {
         let albumData = {};
         albumData.areaId = -1; // 全部
+        albumData.sin = 0;
+        albumData.num = 5;
         getAlbumList(albumData).then(res => {
           if (res.code === ERR_OK) {
-            this.albumList = res.albumlib.data.list.slice(0, 6);
+            this.albumList = res.albumlib.data.list;
             this.scrollData++;
             resolve();
           }
