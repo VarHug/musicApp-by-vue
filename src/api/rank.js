@@ -1,6 +1,5 @@
 import {commonParams, setOptions} from '../api/config';
-import axios from 'axios';
-import { Promise } from 'core-js';
+import * as http from '../common/js/http';
 import jsonp from '../common/js/jsonp';
 
 export function getTopList() {
@@ -12,11 +11,7 @@ export function getTopList() {
     format: 'json'
   });
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }
 
 export function getMusicList(topid) {

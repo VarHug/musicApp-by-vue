@@ -1,6 +1,6 @@
 import jsonp from '../common/js/jsonp';
 import {commonParams, setOptions} from '../api/config';
-import axios from 'axios';
+import * as http from '../common/js/http';
 
 export function getHotKey() {
   const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg';
@@ -37,9 +37,5 @@ export function search(query, page, zhida, perpage) {
     format: 'json'
   });
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }
