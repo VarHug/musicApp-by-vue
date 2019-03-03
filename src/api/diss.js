@@ -1,5 +1,5 @@
 import {commonParams} from '../api/config';
-import axios from 'axios';
+import * as http from '../common/js/http';
 
 export function getDissTag() {
   const url = '/api/getDissTag';
@@ -13,11 +13,7 @@ export function getDissTag() {
     format: 'json'
   });
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }
 
 export function getDissList(opts) {
@@ -37,11 +33,7 @@ export function getDissList(opts) {
     ein: 29 // 结束index
   }, opts);
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }
 
 export function getDissSongList(disstid) {
@@ -59,9 +51,5 @@ export function getDissSongList(disstid) {
     g_tk: 377597455
   });
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }

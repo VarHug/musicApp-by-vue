@@ -1,6 +1,6 @@
 import jsonp from '../common/js/jsonp';
 import {commonParams, setOptions} from '../api/config';
-import axios from 'axios';
+import * as http from '../common/js/http';
 
 const ALBUM_QUERY = {
   areaId: -1
@@ -19,11 +19,7 @@ export function getAlbumList(albumData) {
     data: `{"albumlib":{"method":"get_album_by_tags","param":{"area":${albumQuery.areaId},"company":-1,"genre":-1,"type":-1,"year":-1,"sort":2,"get_tags":1,"sin":${albumQuery.sin},"num":${albumQuery.num},"click_albumid":0},"module":"music.web_album_library"}}`
   });
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }
 
 export function getAlbumInfo(albummid) {

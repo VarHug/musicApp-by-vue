@@ -2,7 +2,7 @@ import {commonParams} from '../api/config';
 import axios from 'axios';
 import {ERR_OK} from '@/api/config.js';
 import {getUid} from '@/common/js/uid';
-import { Promise } from 'core-js';
+import * as http from '../common/js/http';
 
 export function getLyric(mid) {
   const url = '/api/getLyric';
@@ -18,11 +18,7 @@ export function getLyric(mid) {
     g_tk: 1928093487
   });
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }
 
 export function getSongsUrl(songs) {
@@ -117,9 +113,5 @@ export function getMusic(songmid) {
     g_tk: 1928111839
   });
 
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    return Promise.resolve(res.data);
-  });
+  return http.get(url, data);
 }
