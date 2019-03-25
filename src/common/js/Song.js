@@ -56,14 +56,22 @@ export function processSongsUrl(songs) {
     return Promise.resolve(songs);
   }
   return getSongsUrl(songs).then((res) => {
-    if (res.code === ERR_OK) {
-      let midUrlInfo = res.url_mid.data.midurlinfo;
-      midUrlInfo.forEach((info, index) => {
-        let song = songs[index];
-        // song.url = `http://dl.stream.qqmusic.qq.com/${info.purl}`;
-        song.url = `${info.purl}`;
-      });
-    }
+    songs = songs.filter((song) => {
+      let purl = res[song.mid];
+      if (purl) {
+        song.url = purl.indexOf('http') === -1 ? `http://dl.stream.qqmusic.qq.com/${purl}` : purl;
+        return true;
+      }
+      return false;
+    });
+    // if (res.code === ERR_OK) {
+    //   let midUrlInfo = res.url_mid.data.midurlinfo;
+    //   midUrlInfo.forEach((info, index) => {
+    //     let song = songs[index];
+    //     // song.url = `http://dl.stream.qqmusic.qq.com/${info.purl}`;
+    //     song.url = `${info.purl}`;
+    //   });
+    // }
     return songs;
   });
 }

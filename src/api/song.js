@@ -54,9 +54,14 @@ export function getSongsUrl(songs) {
         if (res.code === ERR_OK) {
           let urlMid = res.url_mid;
           if (urlMid && urlMid.code === ERR_OK) {
-            const info = urlMid.data.midurlinfo[0];
-            if (info && info.purl) {
-              resolve(res);
+            let purlMap = {};
+            urlMid.data.midurlinfo.forEach((item) => {
+              if (item.purl) {
+                purlMap[item.songmid] = item.purl;
+              }
+            });
+            if (Object.keys(purlMap).length > 0) {
+              resolve(purlMap);
             } else {
               retry();
             }
