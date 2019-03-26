@@ -29,10 +29,14 @@
 import {getDissTag} from '../../api/diss.js';
 import Scroll from '@/base/scroll/scroll';
 import {ERR_OK} from '@/api/config.js';
+import {playlistMixin} from '@/common/js/mixin.js';
 
 const colNum = 3;
 
 export default {
+  mixins: [
+    playlistMixin
+  ],
   data() {
     return {
       showFlag: false,
@@ -43,6 +47,11 @@ export default {
     this._getDissTag();
   },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : '';
+      this.$refs.selectList.$el.style.bottom = bottom;
+      this.$refs.selectList.refresh();
+    },
     show() {
       this.showFlag = true;
       this._setBorderCss();
