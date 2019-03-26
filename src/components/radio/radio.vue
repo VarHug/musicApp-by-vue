@@ -83,6 +83,11 @@ export default {
           if (res.code === ERR_OK) {
             let radioList = res.data.data.groupList;
             radioList[0].radioList.shift(); // 去除'个性电台'这个list
+            radioList.forEach(listGroup => {
+              if (listGroup.radioList.length % 3 === 2) {
+                listGroup.radioList.push({});
+              }
+            });
             this.radioList = radioList;
             resolve();
           }
