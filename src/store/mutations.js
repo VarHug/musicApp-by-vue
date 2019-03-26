@@ -37,9 +37,6 @@ const mutations = {
   [types.SET_FAVORITE_LIST](state, list) {
     state.favoriteList = list;
   },
-  [types.SET_RADIO_LIST](state, list) {
-    state.radioList = list;
-  },
   [types.SET_ALBUM](state, album) {
     state.album = album;
   }

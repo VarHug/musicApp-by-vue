@@ -22,6 +22,4 @@ export const SET_PLAY_HISTORY = 'SET_PLAY_HISTORY';
 
 export const SET_FAVORITE_LIST = 'SET_FAVORITE_LIST';
 
-export const SET_RADIO_LIST = 'SET_RADIO_LIST';
-
 export const SET_ALBUM = 'SET_ALBUM';

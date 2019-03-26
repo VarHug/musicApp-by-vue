@@ -28,12 +28,12 @@
               <p class="desc" v-html="item.dissname"></p>
             </li>
           </ul>
-          <router-link v-if="radioListCopy.length" tag="h1" class="list-title" to="/radio">
+          <router-link v-if="radioList.length" tag="h1" class="list-title" to="/radio">
             热门电台推荐
             <i class="icon icon-arrow-right"></i>
           </router-link>
-          <ul v-if="radioListCopy.length" class="list">
-            <li v-for="(item, index) in radioListCopy" :key="index" class="item" ref="item" @click="selectRadio(item)">
+          <ul v-if="radioList.length" class="list">
+            <li v-for="(item, index) in radioList" :key="index" class="item" ref="item" @click="selectRadio(item)">
               <div class="img-wrapper">
                 <img v-lazy="item.radioImg">
               </div>
@@ -71,7 +71,7 @@ import {getRadioList} from '@/api/radio.js';
 import {getAlbumList} from '@/api/album.js';
 import {ERR_OK} from '@/api/config.js';
 import {playlistMixin, radioMixin} from '../../common/js/mixin.js';
-import {mapGetters, mapMutations, mapActions} from 'vuex';
+import {mapMutations, mapActions} from 'vuex';
 import queue from '@/common/js/asyncTask.js';
 
 export default {
@@ -88,16 +88,11 @@ export default {
       sin: 0,
       ein: 5,
       // 电台列表
-      radioListCopy: [],
+      radioList: [],
       songsList: [],
       // 专辑列表
       albumList: []
     };
-  },
-  computed: {
-    ...mapGetters([
-      'radioList'
-    ])
   },
   created() {
     queue([
@@ -172,22 +167,15 @@ export default {
     },
     _getRadioList() {
       return new Promise(resolve => {
-        if (!this.radioList || !this.radioList.length) {
-          getRadioList().then(res => {
-            if (res.code === ERR_OK) {
-              let radioList = res.data.data.groupList;
-              radioList[0].radioList.shift(); // 去除'个性电台'这个list
-              this.setRadioList(radioList);
-              this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
-              this.scrollData++;
-              resolve();
-            }
-          });
-        } else {
-          this.radioListCopy = this.radioList[0].radioList.slice(0, 6);
-          this.scrollData++;
-          resolve();
-        }
+        getRadioList().then(res => {
+          if (res.code === ERR_OK) {
+            let radioList = res.data.data.groupList;
+            radioList[0].radioList.shift(); // 去除'个性电台'这个list
+            this.radioList = radioList[0].radioList.slice(0, 6);
+            this.scrollData++;
+            resolve();
+          }
+        });
       });
     },
     _getAlbumList() {
@@ -207,7 +195,6 @@ export default {
     },
     ...mapMutations({
       setDiss: 'SET_DISS',
-      setRadioList: 'SET_RADIO_LIST',
       setAlbum: 'SET_ALBUM'
     }),
     ...mapActions([

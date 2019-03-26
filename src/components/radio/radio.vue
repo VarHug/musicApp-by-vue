@@ -10,7 +10,7 @@
         </div>
       </scroll>
       <scroll class="radio-list" :data="radioList" ref="radioList" :listen-scroll="listenScroll" :probe-type="probeType" @scroll="scroll">
-        <ul class="radio-list-inner">
+        <ul class="radio-list-inner" v-if="radioList">
           <li v-for="(group, index) in radioList" :key="index" ref="listGroup">
             <div>
               <h1 class="title">{{group.name}}</h1>
@@ -33,9 +33,10 @@
 <script type="text/ecmascript-6">
 import RouteHeader from '@/base/route-header/route-header';
 import Scroll from '@/base/scroll/scroll';
-import {mapGetters} from 'vuex';
 import {getData} from '@/common/js/dom.js';
 import {playlistMixin, radioMixin} from '@/common/js/mixin.js';
+import {ERR_OK} from '@/api/config.js';
+import {getRadioList} from '@/api/radio.js';
 
 export default {
   mixins: [
@@ -47,23 +48,16 @@ export default {
       isScrollX: true,
       scrollY: -1,
       diff: -1,
-      currentIndex: 0
+      currentIndex: 0,
+      radioList: []
     };
-  },
-  computed: {
-    ...mapGetters([
-      'radioList'
-    ])
   },
   created() {
     this.listenScroll = true;
     this.listHeight = [];
     this.probeType = 3;
-  },
-  mounted() {
-    this.$nextTick(() => {
+    this._getRadioList().then(() => {
       this._initShortCut();
-      // this.$refs.radioList.refresh();
       this._calculateHeight();
     });
   },
@@ -82,6 +76,18 @@ export default {
     },
     scroll(pos) {
       this.scrollY = pos.y;
+    },
+    _getRadioList() {
+      return new Promise(resolve => {
+        getRadioList().then(res => {
+          if (res.code === ERR_OK) {
+            let radioList = res.data.data.groupList;
+            radioList[0].radioList.shift(); // 去除'个性电台'这个list
+            this.radioList = radioList;
+            resolve();
+          }
+        });
+      });
     },
     _initShortCut() {
       if (this.$refs.shortcutItem) {

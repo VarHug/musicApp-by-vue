@@ -26,6 +26,4 @@ export const playHistory = state => state.playHistory;
 
 export const favoriteList = state => state.favoriteList;
 
-export const radioList = state => state.radioList;
-
 export const album = state => state.album;
